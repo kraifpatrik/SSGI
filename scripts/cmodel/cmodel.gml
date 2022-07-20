@@ -95,7 +95,7 @@ function CModel() constructor
 					vertex_normal(
 						_vertexBuffer,
 						_normals[| _normalIndex],
-						_normals[| _normalIndex + 1],
+						_normals[| _normalIndex + 1] * -1.0,
 						_normals[| _normalIndex + 2]);
 
 					vertex_texcoord(

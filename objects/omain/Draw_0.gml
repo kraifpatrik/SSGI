@@ -19,6 +19,8 @@ surface_set_target_ext(2, surNormal);
 draw_clear(c_black);
 
 camera_apply(camera);
+matrixView = matrix_get(matrix_view);
+matrixProjection = matrix_get(matrix_projection);
 
 _shader = ShGBuffer;
 shader_set(_shader);
