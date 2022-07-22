@@ -1,13 +1,13 @@
-#define SSGI_KERNEL_SIZE 8
+#define KERNEL_SIZE 8
 
 varying vec2 v_vTexCoord;
 
-#define u_sLight gm_BaseTexture
-uniform sampler2D u_sDepth;
-uniform sampler2D u_sNormal;
+#define u_texLight gm_BaseTexture
+uniform sampler2D u_texDepth;
+uniform sampler2D u_texNormal;
 
-uniform sampler2D u_sNoise;
-uniform vec2 u_vNoiseScale;
+uniform sampler2D u_texKernel;
+uniform vec2 u_vKernelScale;
 
 uniform float u_fClipFar;
 uniform vec2 u_vTanAspect;
@@ -16,6 +16,9 @@ uniform float u_fThickness;
 
 uniform mat4 u_mView;
 uniform mat4 u_mProjection;
+
+uniform float u_fDistance;
+uniform float u_fSteps;
 
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
@@ -103,28 +106,26 @@ void main()
 
 	gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
 
-	float originDepth = xDecodeDepth(texture2D(u_sDepth, v_vTexCoord).rgb) * u_fClipFar;
+	float originDepth = xDecodeDepth(texture2D(u_texDepth, v_vTexCoord).rgb) * u_fClipFar;
 	if (originDepth == 0.0 || originDepth == u_fClipFar)
 	{
 		return;
 	}
 	vec3 originView = xProject(u_vTanAspect, v_vTexCoord, originDepth);
 
-	vec3 originNormalWorld = normalize(texture2D(u_sNormal, v_vTexCoord).rgb * 2.0 - 1.0);
+	vec3 originNormalWorld = normalize(texture2D(u_texNormal, v_vTexCoord).rgb * 2.0 - 1.0);
 	vec3 originNormalView = normalize((u_mView * vec4(originNormalWorld, 0.0)).xyz);
 
 	// TODO: Encode Hammersley points into texture
-	int u = int(texture2D(u_sNoise, v_vTexCoord * u_vNoiseScale).x * 255.0);
-	vec2 hammersley2D = xHammersley2D(u, SSGI_KERNEL_SIZE * SSGI_KERNEL_SIZE);
+	int u = int(texture2D(u_texKernel, v_vTexCoord * u_vKernelScale).x * 255.0);
+	vec2 hammersley2D = xHammersley2D(u, KERNEL_SIZE * KERNEL_SIZE);
 	vec3 sampleDir = xImportanceSample_Lambert(hammersley2D, originNormalView);
 
-	const float steps = 32.0;
-	const float distanceMax = 2.0;
-	vec3 endView = originView + sampleDir * distanceMax;
+	vec3 endView = originView + sampleDir * u_fDistance;
 
-	for (float i = 1.0; i <= steps; ++i)
+	for (float i = 1.0; i <= u_fSteps; ++i)
 	{
-		vec3 sampleView = mix(originView, endView, i / steps);
+		vec3 sampleView = mix(originView, endView, i / u_fSteps);
 		vec2 sampleScreen = xUnproject(u_mProjection * vec4(sampleView, 1.0));
 
 		if (sampleScreen.x < 0.0 || sampleScreen.x > 1.0
@@ -133,7 +134,7 @@ void main()
 			break;
 		}
 
-		float sampleDepth = xDecodeDepth(texture2D(u_sDepth, sampleScreen).rgb) * u_fClipFar;
+		float sampleDepth = xDecodeDepth(texture2D(u_texDepth, sampleScreen).rgb) * u_fClipFar;
 
 		if (sampleDepth == 0.0 || sampleDepth == u_fClipFar)
 		{
@@ -142,9 +143,9 @@ void main()
 	
 		if (sampleView.z > sampleDepth)
 		{
-			vec3 sampleNormalWorld = normalize(texture2D(u_sNormal, sampleScreen).rgb * 2.0 - 1.0);
-			gl_FragColor = texture2D(u_sLight, sampleScreen)
-				* (1.0 - clamp(length(originView - sampleView) / distanceMax, 0.0, 1.0))
+			vec3 sampleNormalWorld = normalize(texture2D(u_texNormal, sampleScreen).rgb * 2.0 - 1.0);
+			gl_FragColor = texture2D(u_texLight, sampleScreen)
+				* (1.0 - clamp(length(originView - sampleView) / u_fDistance, 0.0, 1.0))
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
 				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0);
 			break;

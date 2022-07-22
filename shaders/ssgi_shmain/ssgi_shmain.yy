@@ -5,7 +5,7 @@
     "path": "folders/SSGI.yy",
   },
   "resourceVersion": "1.0",
-  "name": "SSGI_ShUpsample4",
+  "name": "SSGI_ShMain",
   "tags": [],
   "resourceType": "GMShader",
 }
