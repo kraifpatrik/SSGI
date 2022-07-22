@@ -49,7 +49,7 @@ surface_reset_target();
 ////////////////////////////////////////////////////////////////////////////////
 // Blur
 gpu_push_state();
-gpu_set_tex_filter(true);
+gpu_set_tex_filter(false);
 gpu_set_tex_repeat(false);
 
 surWork = SurfaceCheck(surWork, _windowWidth / 2, _windowHeight / 2);
@@ -76,6 +76,9 @@ shader_set_uniform_f(shader_get_uniform(SSGI_ShDownsample, "u_vTexel"), 1.0 / (_
 draw_surface(surWork2, 0, 0);
 shader_reset();
 surface_reset_target();
+
+
+gpu_set_tex_filter(true);
 
 var _shader;
 

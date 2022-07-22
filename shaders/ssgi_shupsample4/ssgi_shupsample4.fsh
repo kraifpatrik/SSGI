@@ -1,3 +1,6 @@
+#define BLUR_SIZE 4.0
+#define BLUR_STEP 1.0
+
 varying vec2 v_vTexCoord;
 
 uniform sampler2D u_sDepth;
@@ -20,9 +23,9 @@ void main()
 	float depth = xDecodeDepth(texture2D(u_sDepth, v_vTexCoord).rgb) * u_fClipFar;
 	vec3 normal = normalize(texture2D(u_sNormal, v_vTexCoord).rgb * 2.0 - 1.0);
 	float weightSum = 0.001;
-	for (float i = -4.0; i <= 4.0; i += 1.0)
+	for (float i = -BLUR_SIZE; i <= BLUR_SIZE; i += BLUR_STEP)
 	{
-		for (float j = -4.0; j <= 4.0; j += 1.0)
+		for (float j = -BLUR_SIZE; j <= BLUR_SIZE; j += BLUR_STEP)
 		{
 			vec2 uv = v_vTexCoord + vec2(i, j) * u_vTexel;
 			float sampleDepth = xDecodeDepth(texture2D(u_sDepth, uv).rgb) * u_fClipFar;

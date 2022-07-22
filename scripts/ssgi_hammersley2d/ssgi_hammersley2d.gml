@@ -5,7 +5,7 @@
 ///
 /// @param {Real} _i The point index in sequence.
 /// @param {Real} _n The total size of the sequence.
-/// @param {Array<Real>} _dest The array to write the point coordinates to.
+/// @param {Array<Real>} [_dest] The array to write the point coordinates to.
 ///
 /// @return {Array<Real>} The destination array.
 ///

@@ -119,7 +119,7 @@ void main()
 	vec3 sampleDir = xImportanceSample_Lambert(hammersley2D, originNormalView);
 
 	const float steps = 32.0;
-	const float distanceMax = 3.0;
+	const float distanceMax = 2.0;
 	vec3 endView = originView + sampleDir * distanceMax;
 
 	for (float i = 1.0; i <= steps; ++i)
@@ -142,10 +142,11 @@ void main()
 	
 		if (sampleView.z > sampleDepth)
 		{
+			vec3 sampleNormalWorld = normalize(texture2D(u_sNormal, sampleScreen).rgb * 2.0 - 1.0);
 			gl_FragColor = texture2D(u_sLight, sampleScreen)
 				* (1.0 - clamp(length(originView - sampleView) / distanceMax, 0.0, 1.0))
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
-				;
+				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0);
 			break;
 		}
 	}
