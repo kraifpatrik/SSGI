@@ -4,11 +4,15 @@ application_surface_draw_enable(false);
 debug = false;
 
 camera = camera_create();
-clipFar = 32.0;
+clipFar = 512.0;
 fov = 60.0;
-
-camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
-	-fov, -16.0 / 9.0, 0.1, clipFar));
+x = 3.0;
+y = 0.0;
+z = 1.0;
+direction = 180.0;
+directionUp = 0.0;
+mouseLastX = 0;
+mouseLastY = 0;
 
 model = new CModel()
 	.FromOBJ("Data/CornellBox.obj")

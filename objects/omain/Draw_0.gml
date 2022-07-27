@@ -4,6 +4,7 @@ var _shader;
 
 ////////////////////////////////////////////////////////////////////////////////
 // G-buffer
+SSGI_SurfaceCheck(application_surface, _windowWidth, _windowHeight);
 surDepth = SSGI_SurfaceCheck(surDepth, _windowWidth, _windowHeight);
 surNormal = SSGI_SurfaceCheck(surNormal, _windowWidth, _windowHeight);
 

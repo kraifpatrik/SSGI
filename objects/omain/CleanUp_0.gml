@@ -15,3 +15,5 @@ if (surface_exists(surLight))
 {
 	surface_free(surLight);
 }
+
+ssgi.Destroy();
