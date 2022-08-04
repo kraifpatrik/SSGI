@@ -1,5 +1,6 @@
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
+var _aspectRatio = _windowWidth / _windowHeight;
 var _shader;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -21,8 +22,12 @@ surface_set_target_ext(2, surNormal);
 draw_clear(c_black);
 
 camera_apply(camera);
-ssgi.MatrixView = matrix_get(matrix_view);
+
+var _matrixView = matrix_get(matrix_view);
+ssgi.MatrixView = _matrixView;
 ssgi.MatrixProjection = matrix_get(matrix_projection);
+var _matrixViewInverse = array_create(16);
+MatrixInverse(_matrixView, _matrixViewInverse);
 
 _shader = ShGBuffer;
 shader_set(_shader);
@@ -44,13 +49,37 @@ surface_reset_target();
 gpu_pop_state();
 
 ////////////////////////////////////////////////////////////////////////////////
+// Deferred lighting
+surLight = SSGI_SurfaceCheck(surLight, _windowWidth, _windowHeight);
+
+surface_set_target(surLight);
+draw_clear(c_black);
+
+_shader = ShDeferredLighting;
+shader_set(_shader);
+texture_set_stage(shader_get_sampler_index(_shader, "u_texDepth"),
+	surface_get_texture(surDepth));
+texture_set_stage(shader_get_sampler_index(_shader, "u_texNormal"),
+	surface_get_texture(surNormal));
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
+	clipFar);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vTanAspect"),
+	dtan(fov * 0.5) * _aspectRatio, -dtan(fov * 0.5));
+shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
+	_matrixViewInverse);
+draw_surface(application_surface, 0, 0);
+shader_reset();
+
+surface_reset_target();
+
+////////////////////////////////////////////////////////////////////////////////
 // SSGI
 surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
 surWork = SSGI_SurfaceCheck(surWork, _windowWidth / 2, _windowHeight / 2);
 surWork2 = SSGI_SurfaceCheck(surWork2, _windowWidth / 4, _windowHeight / 4);
 surWork3 = SSGI_SurfaceCheck(surWork3, _windowWidth / 8, _windowHeight / 8);
 
-ssgi.SurLight = application_surface;
+ssgi.SurLight = surLight;
 ssgi.TextureDepth = surface_get_texture(surDepth);
 ssgi.TextureNormals = surface_get_texture(surNormal);
 ssgi.SurResult = surSSGI;

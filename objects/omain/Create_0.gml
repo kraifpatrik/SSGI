@@ -30,8 +30,9 @@ surSSGI = noone;
 ssgi = new SSGI();
 ssgi.Fov = fov;
 ssgi.ClipFar = clipFar;
-ssgi.GISteps = 8;
-ssgi.GIDistance = 2.0;
-ssgi.GIMultiplier = 2.0;
-ssgi.DepthThickness = 0.5;
-ssgi.BlurDepthRange = 0.1;
+ssgi.GISteps = 16;
+ssgi.GIDistance = 8.0;
+ssgi.DepthThickness = 1.0;
+ssgi.BlurDepthRange = 0.2;
+
+giMultiplier = 4.0;

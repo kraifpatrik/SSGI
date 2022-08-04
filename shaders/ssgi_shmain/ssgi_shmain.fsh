@@ -19,7 +19,6 @@ uniform mat4 u_mProjection;
 
 uniform float u_fDistance;
 uniform float u_fSteps;
-uniform float u_fMultiplier;
 
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
@@ -149,7 +148,6 @@ void main()
 				* (1.0 - clamp(length(originView - sampleView) / u_fDistance, 0.0, 1.0))
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
 				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0);
-			gl_FragColor.rgb *= u_fMultiplier;
 			break;
 		}
 	}

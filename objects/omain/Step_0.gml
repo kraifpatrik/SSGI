@@ -58,3 +58,25 @@ ssgi.AspectRatio = _aspectRatio;
 
 camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 	-fov, -_aspectRatio, 0.1, clipFar));
+
+////////////////////////////////////////////////////////////////////////////////
+// Control GI
+if (keyboard_check(vk_control))
+{
+	var _wheel = mouse_wheel_up() - mouse_wheel_down();
+
+	if (keyboard_check(ord("1")))
+	{
+		ssgi.GIDistance += _wheel * 0.5;
+	}
+
+	if (keyboard_check(ord("2")))
+	{
+		ssgi.GISteps += _wheel;
+	}
+
+	if (keyboard_check(ord("3")))
+	{
+		giMultiplier += _wheel * 0.5;
+	}
+}
