@@ -53,5 +53,8 @@ camera_set_view_mat(camera, matrix_build_lookat(
 	z + dtan(directionUp),
 	0.0, 0.0, 1.0));
 
+var _aspectRatio = window_get_width() / window_get_height();
+ssgi.AspectRatio = _aspectRatio;
+
 camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
-	-fov, -window_get_width() / window_get_height(), 0.1, clipFar));
+	-fov, -_aspectRatio, 0.1, clipFar));

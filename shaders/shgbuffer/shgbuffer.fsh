@@ -39,7 +39,13 @@ vec3 xEncodeDepth(float d)
 
 void main()
 {
-	gl_FragData[0] = texture2D(gm_BaseTexture, v_vTexCoord);
+	vec4 base = texture2D(gm_BaseTexture, v_vTexCoord);
+	if (base.a < 0.8)
+	{
+		discard;
+	}
+	base.a = 1.0;
+	gl_FragData[0] = base;
 	gl_FragData[1] = vec4(xEncodeDepth(v_vPosition.z / u_fClipFar), 1.0);
 	gl_FragData[2] = vec4(xBestFitNormal(v_vNormal, u_texBestFitNormals) * 0.5 + 0.5, 1.0);
 }

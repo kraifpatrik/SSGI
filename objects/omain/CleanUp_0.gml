@@ -1,7 +1,6 @@
 camera_destroy(camera);
 
 model.Destroy();
-sprite_delete(texture);
 
 if (surface_exists(surDepth))
 {

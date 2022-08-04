@@ -14,6 +14,10 @@ function SSGI() constructor
 	/// improves quality but has a negative impact on performance.
 	GISteps = 32.0;
 
+	/// @var {Real} Multiplies strength of samples taken during raycasting
+	/// global illumination. Default value is 1.
+	GIMultiplier = 1.0;
+
 	/// @var {Real} The maximum depth difference in world units between two
 	/// samples when blurring raytraced image. Default value is 1. Fine-tune
 	/// this value to prevent blurring over large depth discontinuities.
@@ -87,6 +91,7 @@ function SSGI() constructor
 	static __UMainThickness = shader_get_uniform(__ShaderMain, "u_fThickness");
 	static __UMainSteps = shader_get_uniform(__ShaderMain, "u_fSteps");
 	static __UMainDistance = shader_get_uniform(__ShaderMain, "u_fDistance");
+	static __UMainMultiplier = shader_get_uniform(__ShaderMain, "u_fMultiplier");
 	static __UMainView = shader_get_uniform(__ShaderMain, "u_mView");
 	static __UMainProjection = shader_get_uniform(__ShaderMain, "u_mProjection");
 
@@ -175,6 +180,7 @@ function SSGI() constructor
 		shader_set_uniform_f(__UMainThickness, DepthThickness);
 		shader_set_uniform_f(__UMainSteps, GISteps);
 		shader_set_uniform_f(__UMainDistance, GIDistance);
+		shader_set_uniform_f(__UMainMultiplier, GIMultiplier);
 		shader_set_uniform_matrix_array(__UMainView, MatrixView);
 		shader_set_uniform_matrix_array(__UMainProjection, MatrixProjection);
 		draw_surface(SurLight, 0, 0);

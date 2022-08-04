@@ -12,8 +12,8 @@ if (!debug)
 
 var _x = 0;
 var _y = 0;
-var _width = _windowWidth / 4;
-var _height = _windowHeight / 4;
+var _width = _windowWidth / 8;
+var _height = _windowHeight / 8;
 
 draw_surface_stretched(application_surface, _x, _y, _width, _height);
 _x += _width;

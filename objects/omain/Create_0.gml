@@ -15,11 +15,9 @@ mouseLastX = 0;
 mouseLastY = 0;
 
 model = new CModel()
-	.FromOBJ("Data/CornellBox.obj")
+	.FromOBJ("Data/Sponza/Sponza.obj")
 	.Freeze();
-
-texture = sprite_add("Data/CornellBox.png", 1, false, false, 0, 0);
-model.Texture = sprite_get_texture(texture, 0);
+modelScale = 0.01;
 
 surDepth = noone;
 surNormal = noone;
@@ -31,9 +29,9 @@ surSSGI = noone;
 
 ssgi = new SSGI();
 ssgi.Fov = fov;
-ssgi.AspectRatio = 16.0 / 9.0;
 ssgi.ClipFar = clipFar;
-ssgi.GISteps = 32;
-ssgi.GIDistance = 3.0;
+ssgi.GISteps = 8;
+ssgi.GIDistance = 2.0;
+ssgi.GIMultiplier = 2.0;
 ssgi.DepthThickness = 0.5;
-ssgi.BlurDepthRange = 0.3;
+ssgi.BlurDepthRange = 0.1;

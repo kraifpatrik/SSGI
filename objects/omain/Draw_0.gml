@@ -11,6 +11,9 @@ surNormal = SSGI_SurfaceCheck(surNormal, _windowWidth, _windowHeight);
 gpu_push_state();
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);
+gpu_set_tex_filter(true);
+gpu_set_tex_mip_enable(mip_on);
+gpu_set_texrepeat(true);
 
 surface_set_target_ext(0, application_surface);
 surface_set_target_ext(1, surDepth);
@@ -28,7 +31,12 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBestFitNormals"),
 	sprite_get_texture(SprBestFitNormals, 0));
 
+matrix_set(matrix_world, matrix_build(
+	0.0, 0.0, 0.0,
+	0.0, 0.0, 0.0,
+	modelScale, modelScale, modelScale));
 model.Submit();
+matrix_set(matrix_world, matrix_build_identity());
 shader_reset();
 
 surface_reset_target();
