@@ -1,7 +1,7 @@
 application_surface_enable(true);
 application_surface_draw_enable(false);
 
-debug = true;
+debug = false;
 
 camera = camera_create();
 clipFar = 512.0;
@@ -43,7 +43,7 @@ ssgi.BlurDepthRange = 0.2;
 giMultiplier = 4.0;
 
 sunPosition = [0.0, 0.0, 0.0];
-sunDirection = [-1.0, -0.5, -1.0];
+sunDirection = [0.5, 0.0, -1.0];
 
 shadowmapResolution = 2048;
 shadowmapArea = 64;

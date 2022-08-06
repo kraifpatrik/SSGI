@@ -3,9 +3,6 @@ var _windowHeight = window_get_height();
 var _aspectRatio = _windowWidth / _windowHeight;
 var _shader;
 
-var _view = matrix_get(matrix_view);
-var _proj = matrix_get(matrix_projection);
-
 gpu_push_state();
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);

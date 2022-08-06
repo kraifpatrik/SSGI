@@ -127,7 +127,6 @@ void main()
 	{
 		vec3 sampleView = mix(originView, endView, i / u_fSteps);
 		vec2 sampleScreen = xUnproject(u_mProjection * vec4(sampleView, 1.0));
-		sampleScreen.y = 1.0 - sampleScreen.y;
 
 		if (sampleScreen.x < 0.0 || sampleScreen.x > 1.0
 			|| sampleScreen.y < 0.0 || sampleScreen.y > 1.0)

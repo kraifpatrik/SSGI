@@ -109,9 +109,7 @@ void main()
 	vec3 L = normalize(-u_vSunDirection);
 	vec3 vertexShadowmap = (u_mShadowmap * vec4(vertexWorld + normal * u_fShadowmapNormalOffset, 1.0)).xyz;
 	vertexShadowmap.xy = vertexShadowmap.xy * 0.5 + 0.5;
-//#if defined(_YY_HLSL11_) || defined(_YY_PSSL_)
-//	vertexShadowmap.y = 1.0 - vertexShadowmap.y;
-//#endif
+	vertexShadowmap.y = 1.0 - vertexShadowmap.y;
 	vertexShadowmap.z /= u_fShadowmapArea;
 	float shadow = ShadowMap(u_texShadowmap, u_vShadowmapTexel, vertexShadowmap.xy, vertexShadowmap.z);
 	gl_FragColor.rgb = baseColor * max(dot(normal, L), 0.0) * (1.0 - shadow);

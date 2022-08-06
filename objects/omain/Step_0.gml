@@ -34,14 +34,14 @@ if (keyboard_check(ord("S")))
 
 if (keyboard_check(ord("A")))
 {
-	x += lengthdir_x(_speed, direction + 90);
-	y += lengthdir_y(_speed, direction + 90);
+	x += lengthdir_x(_speed, direction + 90.0);
+	y += lengthdir_y(_speed, direction + 90.0);
 }
 
 if (keyboard_check(ord("D")))
 {
-	x += lengthdir_x(_speed, direction - 90);
-	y += lengthdir_y(_speed, direction - 90);
+	x += lengthdir_x(_speed, direction - 90.0);
+	y += lengthdir_y(_speed, direction - 90.0);
 }
 
 z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * _speed;
@@ -65,7 +65,7 @@ camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadowmap
-if (keyboard_check(vk_enter))
+if (keyboard_check(vk_shift))
 {
 	sunDirection = [
 		_directionX,
@@ -83,7 +83,7 @@ shadowmapView = matrix_build_lookat(
 	sunPosition[2] + sunDirection[2],
 	0.0, 0.0, 1.0);
 shadowmapProjection = matrix_build_projection_ortho(
-	shadowmapArea, -shadowmapArea, -shadowmapArea * 0.5, shadowmapArea * 0.5);
+	shadowmapArea, shadowmapArea, -shadowmapArea * 0.5, shadowmapArea * 0.5);
 shadowmapViewProjection = matrix_multiply(shadowmapView, shadowmapProjection);
 
 ////////////////////////////////////////////////////////////////////////////////
