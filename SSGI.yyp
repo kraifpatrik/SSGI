@@ -14,6 +14,7 @@
     {"id":{"name":"StringSplitOnFirst","path":"scripts/StringSplitOnFirst/StringSplitOnFirst.yy",},"order":2,},
     {"id":{"name":"OMain","path":"objects/OMain/OMain.yy",},"order":0,},
     {"id":{"name":"CMesh","path":"scripts/CMesh/CMesh.yy",},"order":4,},
+    {"id":{"name":"ShShadowmap","path":"shaders/ShShadowmap/ShShadowmap.yy",},"order":3,},
     {"id":{"name":"ShGBuffer","path":"shaders/ShGBuffer/ShGBuffer.yy",},"order":0,},
     {"id":{"name":"RmDemo","path":"rooms/RmDemo/RmDemo.yy",},"order":0,},
   ],
@@ -108,7 +109,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"sponza_thorn_ddn.png","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.6.1.26",
+    "IDEVersion": "2022.6.0.23",
   },
   "resourceVersion": "1.5",
   "name": "SSGI",

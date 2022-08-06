@@ -1,11 +1,11 @@
 {
   "type": 1,
   "parent": {
-    "name": "SSGI",
-    "path": "folders/SSGI.yy",
+    "name": "Shaders",
+    "path": "folders/Demo/Shaders.yy",
   },
   "resourceVersion": "1.0",
-  "name": "SSGI_ShMain",
+  "name": "ShShadowmap",
   "tags": [],
   "resourceType": "GMShader",
 }

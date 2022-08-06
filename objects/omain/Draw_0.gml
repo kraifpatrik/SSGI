@@ -3,11 +3,8 @@ var _windowHeight = window_get_height();
 var _aspectRatio = _windowWidth / _windowHeight;
 var _shader;
 
-////////////////////////////////////////////////////////////////////////////////
-// G-buffer
-SSGI_SurfaceCheck(application_surface, _windowWidth, _windowHeight);
-surDepth = SSGI_SurfaceCheck(surDepth, _windowWidth, _windowHeight);
-surNormal = SSGI_SurfaceCheck(surNormal, _windowWidth, _windowHeight);
+var _view = matrix_get(matrix_view);
+var _proj = matrix_get(matrix_projection);
 
 gpu_push_state();
 gpu_set_zwriteenable(true);
@@ -15,6 +12,35 @@ gpu_set_ztestenable(true);
 gpu_set_tex_filter(true);
 gpu_set_tex_mip_enable(mip_on);
 gpu_set_texrepeat(true);
+
+////////////////////////////////////////////////////////////////////////////////
+// Shadowmap
+surShadowmap = SSGI_SurfaceCheck(surShadowmap, shadowmapResolution, shadowmapResolution);
+
+surface_set_target(surShadowmap);
+draw_clear(c_red);
+
+matrix_set(matrix_view, shadowmapView);
+matrix_set(matrix_projection, shadowmapProjection);
+
+_shader = ShShadowmap;
+shader_set(_shader);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
+	shadowmapArea);
+
+matrix_set(matrix_world, modelMatrix);
+model.Submit()
+matrix_set(matrix_world, matrix_build_identity());
+
+shader_reset();
+
+surface_reset_target();
+
+////////////////////////////////////////////////////////////////////////////////
+// G-buffer
+SSGI_SurfaceCheck(application_surface, _windowWidth, _windowHeight);
+surDepth = SSGI_SurfaceCheck(surDepth, _windowWidth, _windowHeight);
+surNormal = SSGI_SurfaceCheck(surNormal, _windowWidth, _windowHeight);
 
 surface_set_target_ext(0, application_surface);
 surface_set_target_ext(1, surDepth);
@@ -36,12 +62,10 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBestFitNormals"),
 	sprite_get_texture(SprBestFitNormals, 0));
 
-matrix_set(matrix_world, matrix_build(
-	0.0, 0.0, 0.0,
-	0.0, 0.0, 0.0,
-	modelScale, modelScale, modelScale));
+matrix_set(matrix_world, modelMatrix);
 model.Submit();
 matrix_set(matrix_world, matrix_build_identity());
+
 shader_reset();
 
 surface_reset_target();
@@ -67,7 +91,25 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_vTanAspect"),
 	dtan(fov * 0.5) * _aspectRatio, -dtan(fov * 0.5));
 shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
 	_matrixViewInverse);
+
+shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vSunDirection"),
+	sunDirection);
+
+texture_set_stage(shader_get_sampler_index(_shader, "u_texShadowmap"),
+	surface_get_texture(surShadowmap));
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vShadowmapTexel"),
+	1.0 / shadowmapResolution, 1.0 / shadowmapResolution);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fShadowmapArea"),
+	shadowmapArea);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fShadowmapNormalOffset"),
+	shadowmapNormalOffset);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fShadowmapBias"),
+	shadowmapBias);
+shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mShadowmap"),
+	shadowmapViewProjection);
+
 draw_surface(application_surface, 0, 0);
+
 shader_reset();
 
 surface_reset_target();

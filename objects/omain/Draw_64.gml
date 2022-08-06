@@ -24,19 +24,22 @@ if (debug)
 	var _windowHeight = window_get_height();
 	var _x = 0;
 	var _y = 0;
-	var _width = _windowWidth / 8;
-	var _height = _windowHeight / 8;
+	var _width = _windowWidth / 6;
+	var _height = _windowHeight / 6;
 
-	draw_surface_stretched(application_surface, _x, _y, _width, _height);
-	_x += _width;
-
-	draw_surface_stretched(surDepth, _x, _y, _width, _height);
-	_x += _width;
-
-	draw_surface_stretched(surNormal, _x, _y, _width, _height);
-	_x += _width;
+	//draw_surface_stretched(surShadowmap, _x, _y, _height, _height);
+	//_x += _height;
 
 	draw_surface_stretched(surLight, _x, _y, _width, _height);
+	_x += _width;
+
+	draw_surface_stretched(surWork, _x, _y, _width, _height);
+	_x += _width;
+
+	draw_surface_stretched(surWork2, _x, _y, _width, _height);
+	_x += _width;
+
+	draw_surface_stretched(surWork3, _x, _y, _width, _height);
 	_x += _width;
 
 	draw_surface_stretched(surSSGI, _x, _y, _width, _height);

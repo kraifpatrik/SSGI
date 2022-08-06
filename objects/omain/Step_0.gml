@@ -46,11 +46,15 @@ if (keyboard_check(ord("D")))
 
 z += (keyboard_check(ord("E")) - keyboard_check(ord("Q"))) * _speed;
 
+var _directionX = dcos(direction);
+var _directionY = -dsin(direction);
+var _directionZ = dtan(directionUp);
+
 camera_set_view_mat(camera, matrix_build_lookat(
 	x, y, z,
-	x + dcos(direction),
-	y - dsin(direction),
-	z + dtan(directionUp),
+	x + _directionX,
+	y + _directionY,
+	z + _directionZ,
 	0.0, 0.0, 1.0));
 
 var _aspectRatio = window_get_width() / window_get_height();
@@ -58,6 +62,29 @@ ssgi.AspectRatio = _aspectRatio;
 
 camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 	-fov, -_aspectRatio, 0.1, clipFar));
+
+////////////////////////////////////////////////////////////////////////////////
+// Shadowmap
+if (keyboard_check(vk_enter))
+{
+	sunDirection = [
+		_directionX,
+		_directionY,
+		_directionZ,
+	];
+}
+
+shadowmapView = matrix_build_lookat(
+	sunPosition[0],
+	sunPosition[1],
+	sunPosition[2],
+	sunPosition[0] + sunDirection[0],
+	sunPosition[1] + sunDirection[1],
+	sunPosition[2] + sunDirection[2],
+	0.0, 0.0, 1.0);
+shadowmapProjection = matrix_build_projection_ortho(
+	shadowmapArea, -shadowmapArea, -shadowmapArea * 0.5, shadowmapArea * 0.5);
+shadowmapViewProjection = matrix_multiply(shadowmapView, shadowmapProjection);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Control GI
