@@ -105,6 +105,9 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_fShadowmapBias"),
 shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mShadowmap"),
 	shadowmapViewProjection);
 
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vCameraPosition"),
+	x, y, z);
+
 draw_surface(application_surface, 0, 0);
 
 shader_reset();

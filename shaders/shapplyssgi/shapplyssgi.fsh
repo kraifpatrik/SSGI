@@ -26,10 +26,10 @@ vec3 TonemapReinhard(vec3 color)
 
 void main()
 {
-	gl_FragColor.rgb = xGammaToLinear(texture2D(u_texLight, v_vTexCoord).rgb)
-		+ (xGammaToLinear(texture2D(u_texBaseColor, v_vTexCoord).rgb)
-		* xGammaToLinear(texture2D(u_texSSGI, v_vTexCoord).rgb) * u_fMultiplier);
-	//gl_FragColor.rgb = TonemapReinhard(gl_FragColor.rgb);
+	gl_FragColor.rgb = xGammaToLinear(texture2D(u_texBaseColor, v_vTexCoord).rgb)
+		* xGammaToLinear(texture2D(u_texSSGI, v_vTexCoord).rgb) * u_fMultiplier;
+	gl_FragColor.rgb = TonemapReinhard(gl_FragColor.rgb);
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
+	gl_FragColor.rgb += texture2D(u_texLight, v_vTexCoord).rgb;
 	gl_FragColor.a = 1.0;
 }

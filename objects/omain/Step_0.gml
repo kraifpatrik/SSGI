@@ -65,7 +65,7 @@ camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadowmap
-if (keyboard_check(vk_shift))
+if (keyboard_check(ord("X")))
 {
 	sunDirection = [
 		_directionX,
@@ -104,6 +104,16 @@ if (keyboard_check(vk_control))
 
 	if (keyboard_check(ord("3")))
 	{
-		giMultiplier += _wheel * 0.5;
+		ssgi.DepthThickness += _wheel * 0.1;
+	}
+
+	if (keyboard_check(ord("4")))
+	{
+		ssgi.BlurDepthRange += _wheel * 0.1;
+	}
+
+	if (keyboard_check(ord("5")))
+	{
+		giMultiplier += _wheel * 0.25;
 	}
 }

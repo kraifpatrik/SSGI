@@ -19,6 +19,8 @@ uniform float u_fShadowmapNormalOffset;
 uniform float u_fShadowmapBias;
 uniform mat4 u_mShadowmap;
 
+uniform vec3 u_vCameraPosition;
+
 /// @param c Encoded depth.
 /// @return Docoded linear depth.
 /// @source http://aras-p.info/blog/2009/07/30/encoding-floats-to-rgba-the-final/
@@ -106,13 +108,25 @@ void main()
 	vec3 normal = normalize(texture2D(u_texNormal, v_vTexCoord).rgb * 2.0 - 1.0);
 	vec3 vertexView = xProject(u_vTanAspect, v_vTexCoord, depth);
 	vec3 vertexWorld = (u_mViewInverse * vec4(vertexView, 1.0)).xyz;
-	vec3 L = normalize(-u_vSunDirection);
+
+	vec3 lightDiffuse = vec3(0.0);
+	vec3 L;
+
+	L = normalize(-u_vSunDirection);
 	vec3 vertexShadowmap = (u_mShadowmap * vec4(vertexWorld + normal * u_fShadowmapNormalOffset, 1.0)).xyz;
 	vertexShadowmap.xy = vertexShadowmap.xy * 0.5 + 0.5;
 	vertexShadowmap.y = 1.0 - vertexShadowmap.y;
 	vertexShadowmap.z /= u_fShadowmapArea;
 	float shadow = ShadowMap(u_texShadowmap, u_vShadowmapTexel, vertexShadowmap.xy, vertexShadowmap.z);
-	gl_FragColor.rgb = baseColor * max(dot(normal, L), 0.0) * (1.0 - shadow);
+	lightDiffuse += vec3(1.0) * max(dot(normal, L), 0.0) * (1.0 - shadow);
+
+	L = u_vCameraPosition - vertexWorld;
+	float dist = length(L);
+	L = normalize(L);
+	float att = 1.0 / (dist * dist);
+	lightDiffuse += vec3(1.0) * max(dot(normal, L), 0.0) * att;
+
+	gl_FragColor.rgb = baseColor * lightDiffuse;
 	gl_FragColor.rgb = TonemapReinhard(gl_FragColor.rgb);
 	gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 	gl_FragColor.a = 1.0;

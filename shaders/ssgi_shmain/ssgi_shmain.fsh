@@ -1,4 +1,4 @@
-#define KERNEL_SIZE 8
+#define KERNEL_SIZE 32
 
 varying vec2 v_vTexCoord;
 
@@ -144,10 +144,13 @@ void main()
 		if (sampleView.z > sampleDepth)
 		{
 			vec3 sampleNormalWorld = normalize(texture2D(u_texNormal, sampleScreen).rgb * 2.0 - 1.0);
+			//float dist = length(sampleView - originView);
 			gl_FragColor = texture2D(u_texLight, sampleScreen)
 				* (1.0 - clamp(length(originView - sampleView) / u_fDistance, 0.0, 1.0))
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
-				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0);
+				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0)
+				//* 1.0 / (dist * dist)
+				;
 			break;
 		}
 	}

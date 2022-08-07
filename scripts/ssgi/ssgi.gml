@@ -1,4 +1,4 @@
-#macro __SSGI_KERNEL_SIZE 8
+#macro __SSGI_KERNEL_SIZE 32
 
 /// @func SSGI()
 ///
@@ -181,6 +181,8 @@ function SSGI() constructor
 		shader_reset();
 		gpu_pop_state();
 		surface_reset_target();
+
+		//return self;
 
 		gpu_push_state(); // <-- Push state!
 

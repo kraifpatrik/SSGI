@@ -53,7 +53,9 @@ if (keyboard_check(vk_control))
 	var _text =
 		  "(1) Distance: " + string(ssgi.GIDistance) + "\n"
 		+ "(2) Steps: " + string(ssgi.GISteps) + "\n"
-		+ "(3) Multiplier: " + string(giMultiplier) + "\n";
+		+ "(3) Depth thickness: " + string(ssgi.DepthThickness) + "\n"
+		+ "(4) Blur depth range: " + string(ssgi.BlurDepthRange) + "\n"
+		+ "(5) Multiplier: " + string(giMultiplier) + "\n";
 
 	draw_text(16, 16, _text);
 }
