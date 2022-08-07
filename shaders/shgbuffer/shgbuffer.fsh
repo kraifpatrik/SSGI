@@ -4,6 +4,7 @@ varying vec2 v_vTexCoord;
 
 uniform float u_fClipFar;
 uniform sampler2D u_texBestFitNormals;
+uniform vec3 u_vEmissive;
 
 /// @source http://advances.realtimerendering.com/s2010/Kaplanyan-CryEngine3(SIGGRAPH%202010%20Advanced%20RealTime%20Rendering%20Course).pdf
 vec3 xBestFitNormal(vec3 normal, sampler2D tex)
@@ -48,4 +49,5 @@ void main()
 	gl_FragData[0] = base;
 	gl_FragData[1] = vec4(xEncodeDepth(v_vPosition.z / u_fClipFar), 1.0);
 	gl_FragData[2] = vec4(xBestFitNormal(v_vNormal, u_texBestFitNormals) * 0.5 + 0.5, 1.0);
+	gl_FragData[3] = vec4(u_vEmissive, 1.0);
 }

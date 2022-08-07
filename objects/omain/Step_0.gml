@@ -117,3 +117,29 @@ if (keyboard_check(vk_control))
 		giMultiplier += _wheel * 0.25;
 	}
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Spawn spheres
+if (mouse_check_button_pressed(mb_left))
+{
+	sphere = instance_create_layer(0, 0, layer, OSphere);
+}
+
+if (instance_exists(sphere))
+{
+	if (!keyboard_check(vk_control))
+	{
+		sphereDistance += (mouse_wheel_up() - mouse_wheel_down()) * 0.25;
+	}
+
+	var _dcosDirectionUp = dcos(directionUp);
+	sphere.x = x + lengthdir_x(sphereDistance * _dcosDirectionUp, direction);
+	sphere.y = y + lengthdir_y(sphereDistance * _dcosDirectionUp, direction);
+	sphere.z = z - lengthdir_y(sphereDistance, directionUp);
+
+	if (keyboard_check_pressed(vk_backspace))
+	{
+		instance_destroy(sphere);
+		sphere = noone;
+	}
+}

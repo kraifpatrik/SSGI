@@ -1,3 +1,4 @@
+randomize();
 application_surface_enable(true);
 application_surface_draw_enable(false);
 
@@ -52,3 +53,10 @@ shadowmapBias = 0.0;
 shadowmapView = matrix_build_identity();
 shadowmapProjection = matrix_build_identity();
 shadowmapViewProjection = matrix_build_identity();
+
+modelSphere = new CModel()
+	.FromOBJ("Data/Sphere.obj")
+	.Freeze();
+
+sphere = noone;
+sphereDistance = 2.0;

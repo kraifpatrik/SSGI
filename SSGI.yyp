@@ -6,6 +6,7 @@
     {"id":{"name":"CMaterial","path":"scripts/CMaterial/CMaterial.yy",},"order":3,},
     {"id":{"name":"SSGI_ShUpsample","path":"shaders/SSGI_ShUpsample/SSGI_ShUpsample.yy",},"order":2,},
     {"id":{"name":"SSGI_ShDownsample","path":"shaders/SSGI_ShDownsample/SSGI_ShDownsample.yy",},"order":0,},
+    {"id":{"name":"OSphere","path":"objects/OSphere/OSphere.yy",},"order":1,},
     {"id":{"name":"SSGI","path":"scripts/SSGI/SSGI.yy",},"order":3,},
     {"id":{"name":"SSGI_ShMain","path":"shaders/SSGI_ShMain/SSGI_ShMain.yy",},"order":1,},
     {"id":{"name":"ShDeferredLighting","path":"shaders/ShDeferredLighting/ShDeferredLighting.yy",},"order":1,},
@@ -107,6 +108,7 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"vase_plant.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"vase_round.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"sponza_thorn_ddn.png","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data","resourceVersion":"1.0","name":"Sphere.obj","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2022.6.1.26",

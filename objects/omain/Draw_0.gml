@@ -1,6 +1,7 @@
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
 var _aspectRatio = _windowWidth / _windowHeight;
+var _modelSphere = modelSphere;
 var _shader;
 
 gpu_push_state();
@@ -27,6 +28,12 @@ shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 
 matrix_set(matrix_world, modelMatrix);
 model.Submit()
+
+with (OSphere)
+{
+	matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, scale, scale, scale));
+	_modelSphere.Submit();
+}
 matrix_set(matrix_world, matrix_build_identity());
 
 shader_reset();
@@ -38,10 +45,12 @@ surface_reset_target();
 SSGI_SurfaceCheck(application_surface, _windowWidth, _windowHeight);
 surDepth = SSGI_SurfaceCheck(surDepth, _windowWidth, _windowHeight);
 surNormal = SSGI_SurfaceCheck(surNormal, _windowWidth, _windowHeight);
+surLight = SSGI_SurfaceCheck(surLight, _windowWidth, _windowHeight);
 
 surface_set_target_ext(0, application_surface);
 surface_set_target_ext(1, surDepth);
 surface_set_target_ext(2, surNormal);
+surface_set_target_ext(3, surLight);
 draw_clear(c_black);
 
 camera_apply(camera);
@@ -53,14 +62,27 @@ var _matrixViewInverse = array_create(16);
 MatrixInverse(_matrixView, _matrixViewInverse);
 
 _shader = ShGBuffer;
+var _uEmissive = shader_get_uniform(_shader, "u_vEmissive");
+
 shader_set(_shader);
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 	clipFar);
 texture_set_stage(shader_get_sampler_index(_shader, "u_texBestFitNormals"),
 	sprite_get_texture(SprBestFitNormals, 0));
 
+shader_set_uniform_f(_uEmissive, 0.0, 0.0, 0.0);
 matrix_set(matrix_world, modelMatrix);
-model.Submit();
+model.Submit()
+
+with (OSphere)
+{
+	shader_set_uniform_f(_uEmissive,
+		color_get_red(color) / 255,
+		color_get_green(color) / 255,
+		color_get_blue(color) / 255);
+	matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, scale, scale, scale));
+	_modelSphere.Submit();
+}
 matrix_set(matrix_world, matrix_build_identity());
 
 shader_reset();
@@ -71,10 +93,8 @@ gpu_pop_state();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Deferred lighting
-surLight = SSGI_SurfaceCheck(surLight, _windowWidth, _windowHeight);
-
 surface_set_target(surLight);
-draw_clear(c_black);
+//draw_clear(c_black);
 
 _shader = ShDeferredLighting;
 shader_set(_shader);
@@ -108,7 +128,9 @@ shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mShadowmap"),
 shader_set_uniform_f(shader_get_uniform(_shader, "u_vCameraPosition"),
 	x, y, z);
 
+gpu_set_blendmode(bm_add);
 draw_surface(application_surface, 0, 0);
+gpu_set_blendmode(bm_normal);
 
 shader_reset();
 
