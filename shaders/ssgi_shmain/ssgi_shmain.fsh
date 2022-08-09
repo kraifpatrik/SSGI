@@ -99,6 +99,20 @@ vec2 xHammersley2D(int i, int n)
 	return vec2(float(i) / float(n), xVanDerCorpus(i, 2));
 }
 
+#define X_GAMMA 2.2
+
+/// @desc Converts gamma space color to linear space.
+vec3 xGammaToLinear(vec3 rgb)
+{
+	return pow(rgb, vec3(X_GAMMA));
+}
+
+/// @desc Converts linear space color to gamma space.
+vec3 xLinearToGamma(vec3 rgb)
+{
+	return pow(rgb, vec3(1.0 / X_GAMMA));
+}
+
 // TODO: Optimize
 void main()
 {
@@ -144,13 +158,14 @@ void main()
 		if (sampleView.z > sampleDepth)
 		{
 			vec3 sampleNormalWorld = normalize(texture2D(u_texNormal, sampleScreen).rgb * 2.0 - 1.0);
-			//float dist = length(sampleView - originView);
-			gl_FragColor = texture2D(u_texLight, sampleScreen)
-				* (1.0 - clamp(length(originView - sampleView) / u_fDistance, 0.0, 1.0))
+			float dist = length(sampleView - originView);
+			float att = 1.0 - clamp(dist / u_fDistance, 0.0, 1.0);
+			gl_FragColor = vec4(xGammaToLinear(texture2D(u_texLight, sampleScreen).rgb), 1.0)
+				* att
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
-				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0)
-				//* 1.0 / (dist * dist)
+				//* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0)
 				;
+			gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 			break;
 		}
 	}

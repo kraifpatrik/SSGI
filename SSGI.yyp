@@ -11,6 +11,7 @@
     {"id":{"name":"SSGI_ShMain","path":"shaders/SSGI_ShMain/SSGI_ShMain.yy",},"order":1,},
     {"id":{"name":"ShDeferredLighting","path":"shaders/ShDeferredLighting/ShDeferredLighting.yy",},"order":1,},
     {"id":{"name":"MatrixInverse","path":"scripts/MatrixInverse/MatrixInverse.yy",},"order":5,},
+    {"id":{"name":"FntOpenSans24Bold","path":"fonts/FntOpenSans24Bold/FntOpenSans24Bold.yy",},"order":0,},
     {"id":{"name":"SprBestFitNormals","path":"sprites/SprBestFitNormals/SprBestFitNormals.yy",},"order":0,},
     {"id":{"name":"StringSplitOnFirst","path":"scripts/StringSplitOnFirst/StringSplitOnFirst.yy",},"order":2,},
     {"id":{"name":"OMain","path":"objects/OMain/OMain.yy",},"order":0,},
@@ -53,6 +54,7 @@
     {"folderPath":"folders/Demo/Sprites.yy","order":3,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Demo/Scripts.yy","order":4,"resourceVersion":"1.0","name":"Scripts","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Demo/Objects.yy","order":5,"resourceVersion":"1.0","name":"Objects","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/Demo/Fonts.yy","order":6,"resourceVersion":"1.0","name":"Fonts","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":-1,"resourceVersion":"1.3","name":"audiogroup_default","resourceType":"GMAudioGroup",},
@@ -109,6 +111,8 @@
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"vase_round.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data/Sponza/textures","resourceVersion":"1.0","name":"sponza_thorn_ddn.png","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles/Data","resourceVersion":"1.0","name":"Sphere.obj","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data","resourceVersion":"1.0","name":"Sphere.mtl","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles/Data","resourceVersion":"1.0","name":"Black.png","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2022.6.1.26",

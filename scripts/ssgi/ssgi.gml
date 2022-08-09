@@ -5,6 +5,11 @@
 /// @desc
 function SSGI() constructor
 {
+	/// @var {Bool} If `true` then global illumination is raytraced at
+	/// half-resolution, which can greatly improve performance at the cost of
+	/// visual quality. Default value is `true`.
+	HalfRes = true;
+
 	/// @var {Real} The maximum distance in world units a ray can travel when
 	/// sampling global illumination. Default value is 1.
 	GIDistance = 1.0;
@@ -156,13 +161,15 @@ function SSGI() constructor
 		var _texelHeight = 1.0 / _surfaceHeight;
 
 		////////////////////////////////////////////////////////////////////////////////
-		// Raytrace
-		surface_set_target(SurResult);
+		// Raytrace at half resolution
+		surface_set_target(HalfRes ? SurHalf : SurResult);
 		draw_clear(c_black);
 		gpu_push_state();
 		shader_set(__ShaderMain);
 		texture_set_stage(__UMainDepth, TextureDepth);
+		gpu_set_tex_filter_ext(__UMainDepth, false);
 		texture_set_stage(__UMainNormal, TextureNormals);
+		gpu_set_tex_filter_ext(__UMainNormal, false);
 		texture_set_stage(__UMainKernel, sprite_get_texture(__SpriteKernel, 0));
 		gpu_set_tex_repeat_ext(__UMainKernel, true);
 		gpu_set_tex_filter_ext(__UMainKernel, false);
@@ -177,12 +184,10 @@ function SSGI() constructor
 		shader_set_uniform_f(__UMainDistance, GIDistance);
 		shader_set_uniform_matrix_array(__UMainView, MatrixView);
 		shader_set_uniform_matrix_array(__UMainProjection, MatrixProjection);
-		draw_surface(SurLight, 0, 0);
+		draw_surface_ext(SurLight, 0, 0, HalfRes ? 0.5 : 1.0, HalfRes ? 0.5 : 1.0, 0.0, c_white, 1.0);
 		shader_reset();
 		gpu_pop_state();
 		surface_reset_target();
-
-		//return self;
 
 		gpu_push_state(); // <-- Push state!
 
@@ -193,10 +198,13 @@ function SSGI() constructor
 
 		shader_set(__ShaderDownsample);
 
-		surface_set_target(SurHalf);
-		shader_set_uniform_f(__UDownsampleTexel, _texelWidth, _texelHeight);
-		draw_surface(SurResult, 0, 0);
-		surface_reset_target();
+		if (!HalfRes)
+		{
+			surface_set_target(SurHalf);
+			shader_set_uniform_f(__UDownsampleTexel, _texelWidth, _texelHeight);
+			draw_surface(SurResult, 0, 0);
+			surface_reset_target();
+		}
 
 		surface_set_target(SurQuarter);
 		shader_set_uniform_f(__UDownsampleTexel, _texelWidth * 2.0, _texelHeight * 2.0);
@@ -225,19 +233,19 @@ function SSGI() constructor
 
 		surface_set_target(SurQuarter);
 		shader_set_uniform_f(__UUpsampleTexel, _texelWidth * 8.0, _texelHeight * 8.0);
-		shader_set_uniform_f(__UUpsampleBlurSize, 8.0);
+		shader_set_uniform_f(__UUpsampleBlurSize, HalfRes ? 6.0 : 8.0);
 		draw_surface_stretched(SurEighth, 0, 0, _surfaceWidth * 0.25, _surfaceHeight * 0.25);
 		surface_reset_target();
 
 		surface_set_target(SurHalf);
 		shader_set_uniform_f(__UUpsampleTexel, _texelWidth * 4.0, _texelHeight * 4.0);
-		shader_set_uniform_f(__UUpsampleBlurSize, 4.0);
+		shader_set_uniform_f(__UUpsampleBlurSize, HalfRes ? 3.0 : 4.0);
 		draw_surface_stretched(SurQuarter, 0, 0, _surfaceWidth * 0.5, _surfaceHeight * 0.5);
 		surface_reset_target();
 
 		surface_set_target(SurResult);
 		shader_set_uniform_f(__UUpsampleTexel, _texelWidth * 2.0, _texelHeight * 2.0);
-		shader_set_uniform_f(__UUpsampleBlurSize, 2.0);
+		shader_set_uniform_f(__UUpsampleBlurSize, HalfRes ? 1.0 : 2.0);
 		draw_surface_stretched(SurHalf, 0, 0, _surfaceWidth, _surfaceHeight);
 		surface_reset_target();
 

@@ -92,27 +92,32 @@ if (keyboard_check(vk_control))
 {
 	var _wheel = mouse_wheel_up() - mouse_wheel_down();
 
-	if (keyboard_check(ord("1")))
+	if (keyboard_check_pressed(ord("1")))
 	{
-		ssgi.GIDistance += _wheel * 0.5;
+		ssgi.HalfRes = !ssgi.HalfRes;
 	}
 
 	if (keyboard_check(ord("2")))
 	{
-		ssgi.GISteps += _wheel;
+		ssgi.GIDistance += _wheel * 0.5;
 	}
 
 	if (keyboard_check(ord("3")))
 	{
-		ssgi.DepthThickness += _wheel * 0.1;
+		ssgi.GISteps += _wheel;
 	}
 
 	if (keyboard_check(ord("4")))
 	{
-		ssgi.BlurDepthRange += _wheel * 0.1;
+		ssgi.DepthThickness += _wheel * 0.1;
 	}
 
 	if (keyboard_check(ord("5")))
+	{
+		ssgi.BlurDepthRange += _wheel * 0.1;
+	}
+
+	if (keyboard_check(ord("6")))
 	{
 		giMultiplier += _wheel * 0.25;
 	}

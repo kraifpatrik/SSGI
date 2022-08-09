@@ -1,3 +1,6 @@
+var _windowWidth = window_get_width();
+var _windowHeight = window_get_height();
+
 if (!keyboard_check(vk_space))
 {
 	var _shader = ShApplySSGI;
@@ -20,8 +23,6 @@ else
 // Debug
 if (debug)
 {
-	var _windowWidth = window_get_width();
-	var _windowHeight = window_get_height();
 	var _x = 0;
 	var _y = 0;
 	var _width = _windowWidth / 6;
@@ -51,11 +52,35 @@ if (debug)
 if (keyboard_check(vk_control))
 {
 	var _text =
-		  "(1) Distance: " + string(ssgi.GIDistance) + "\n"
-		+ "(2) Steps: " + string(ssgi.GISteps) + "\n"
-		+ "(3) Depth thickness: " + string(ssgi.DepthThickness) + "\n"
-		+ "(4) Blur depth range: " + string(ssgi.BlurDepthRange) + "\n"
-		+ "(5) Multiplier: " + string(giMultiplier) + "\n";
+		  "[Ctrl+1] HalfRes: " + (ssgi.HalfRes ? "true" : "false") + "\n"
+		+ "[Ctrl+2+MouseWheel] Distance: " + string(ssgi.GIDistance) + "\n"
+		+ "[Ctrl+3+MouseWheel] Steps: " + string(ssgi.GISteps) + "\n"
+		+ "[Ctrl+4+MouseWheel] Depth thickness: " + string(ssgi.DepthThickness) + "\n"
+		+ "[Ctrl+5+MouseWheel] Blur depth range: " + string(ssgi.BlurDepthRange) + "\n"
+		+ "[Ctrl+6+MouseWheel] Multiplier: " + string(giMultiplier) + "\n"
+		+ "Hold [Space] to hide SSGI\n"
+		;
 
 	draw_text(16, 16, _text);
 }
+
+////////////////////////////////////////////////////////////////////////////////
+// Text
+var _font = draw_get_font();
+var _halign = draw_get_halign();
+var _valign = draw_get_valign();
+
+draw_set_font(FntOpenSans24Bold);
+draw_set_halign(fa_right);
+draw_set_valign(fa_bottom);
+
+var _x = _windowWidth - 16;
+var _y = _windowHeight - 16;
+var _text = keyboard_check(vk_space) ? "SSGI OFF" : "SSGI ON";
+
+draw_text_color(_x + 2, _y + 2, _text, c_black, c_black, c_black, c_black, 1.0);
+draw_text(_x, _y, _text);
+
+draw_set_font(_font);
+draw_set_halign(_halign);
+draw_set_valign(_valign);
