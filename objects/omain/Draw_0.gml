@@ -97,7 +97,12 @@ gpu_pop_state();
 // SSAO
 surSSAO = SSGI_SurfaceCheck(surSSAO, _windowWidth, _windowHeight);
 surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
-ssao_draw(64.0, 2.0, 0.03, 1.0, surSSAO, surSSGI, surDepth, _matrixProjection, clipFar);
+
+ssao.MatrixProjection = _matrixProjection;
+ssao.SurResult = surSSAO;
+ssao.SurWork = surSSGI; // Using the SSGI surface here as a temp. working surface
+ssao.SurDepth = surDepth;
+ssao.Render();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Deferred lighting

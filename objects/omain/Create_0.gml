@@ -44,6 +44,11 @@ ssgi.BlurDepthRange = 1.0;
 
 giMultiplier = 1.0;
 
+ssao = new SSAO();
+ssao.Radius = 64.0;
+ssao.Power = 2.0;
+ssao.ClipFar = clipFar;
+
 sunPosition = [0.0, 0.0, 0.0];
 sunDirection = [0.5, 0.0, -1.0];
 

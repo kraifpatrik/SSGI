@@ -7,172 +7,201 @@
 /// @private
 #macro __SSAO_KERNEL_SIZE 8
 
-/// @var {Id.Sprite}
-/// @private
-global.__ssaoNoise = ssao_make_noise(__SSAO_NOISE_TEXTURE_SIZE);
-
-/// @var {Array<Real>}
-/// @private
-global.__ssaoKernel = ssao_create_kernel(__SSAO_KERNEL_SIZE);
-
-/// @func ssao_make_noise(_size)
+/// @func SSAO()
 ///
-/// @desc Creates a sprite containing a random noise for the SSAO.
-///
-/// @param {Real} _size The size of the sprite.
-///
-/// @return {Id.Sprite} The created noise sprite.
-///
-/// @private
-function ssao_make_noise(_size)
+/// @desc
+function SSAO() constructor
 {
-	var _seed = random_get_seed();
-	randomize();
-	var _sur = surface_create(_size, _size);
-	surface_set_target(_sur);
-	draw_clear(0);
-	var _dir = 0;
-	var _dirStep = 180 / (_size * _size);
-	for (var i = 0; i < _size; ++i)
-	{
-		for (var j = 0; j < _size; ++j)
+	/// @var {Real} Screen-space radius of the occlusion effect. Default value is
+	/// 16.
+	Radius = 16.0;
+
+	/// @var {Real} Strength of the occlusion effect. Should be greater than 0.
+	/// Default value is 1.
+	Power = 1.0;
+
+	/// @var {Real} Angle bias in radians. Default value is 0.03.
+	AngleBias = 0.03;
+
+	/// @var {Real} Maximum depth difference of SSAO samples. Default value is 1.
+	DepthRange = 1.0;
+
+	/// @var {Real} Maximum depth difference of samples when blurring SSAO.
+	/// Default value is 0.1.
+	BlurDepthRange = 0.1;
+
+	/// @var {Id.Sprite}
+	/// @private
+	__SpriteNoise = MakeNoiseSprite(__SSAO_NOISE_TEXTURE_SIZE);
+
+	/// @var {Array<Real>}
+	/// @private
+	__Kernel = CreateKernel(__SSAO_KERNEL_SIZE);
+
+	/// @var {Id.Surface} The surface to draw the SSAO to.
+	SurResult = noone;
+
+	/// @var {Id.Surface} A working surface used for blurring the SSAO.
+	SurWork = noone;
+
+	/// @var {Id.Surface} A surface containing scene depth.
+	SurDepth = noone;
+
+	/// @var {Array<Real>} The projection matrix used when rendering the scene.
+	MatrixProjection = matrix_build_identity();
+
+	/// @var {Real} Distance to the far clipping plane used when rendering the
+	/// scene.
+	ClipFar = 1.0;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Shaders and uniforms
+	static __ShaderMain = SSAO_ShMain;
+	static __UMainTexNoise = shader_get_sampler_index(__ShaderMain, "u_texNoise");
+	static __UMainTexel = shader_get_uniform(__ShaderMain, "u_vTexel");
+	static __UMainClipFar = shader_get_uniform(__ShaderMain, "u_fClipFar");
+	static __UMainTanAspect = shader_get_uniform(__ShaderMain, "u_vTanAspect");
+	static __UMainSampleKernel = shader_get_uniform(__ShaderMain, "u_vSampleKernel");
+	static __UMainRadius = shader_get_uniform(__ShaderMain, "u_fRadius");
+	static __UMainPower = shader_get_uniform(__ShaderMain, "u_fPower");
+	static __UMainNoiseScale = shader_get_uniform(__ShaderMain, "u_vNoiseScale");
+	static __UMainAngleBias = shader_get_uniform(__ShaderMain, "u_fAngleBias");
+	static __UMainDepthRange = shader_get_uniform(__ShaderMain, "u_fDepthRange");
+
+	static __ShaderBlur = SSAO_ShBlur;
+	static __UBlurTexel = shader_get_uniform(__ShaderBlur, "u_vTexel");
+	static __UBlurTexDepth = shader_get_sampler_index(__ShaderBlur, "u_texDepth");
+	static __UBlurClipFar = shader_get_uniform(__ShaderBlur, "u_fClipFar");
+	static __UBlurDepthRange = shader_get_uniform(__ShaderBlur, "u_fDepthRange");
+
+	/// @func MakeNoiseSprite(_size)
+	///
+	/// @desc Creates a sprite containing a random noise for the SSAO.
+	///
+	/// @param {Real} _size The size of the sprite.
+	///
+	/// @return {Id.Sprite} The created noise sprite.
+	static MakeNoiseSprite = function (_size) {
+		var _seed = random_get_seed();
+		randomize();
+		var _sur = surface_create(_size, _size);
+		surface_set_target(_sur);
+		draw_clear(0);
+		var _dir = 0;
+		var _dirStep = 180.0 / (_size * _size);
+		for (var i = 0; i < _size; ++i)
 		{
-			var _col = make_colour_rgb(
-				(dcos(_dir) * 0.5 + 0.5) * 255,
-				(dsin(_dir) * 0.5 + 0.5) * 255,
-				0);
-			draw_point_colour(i, j, _col);
+			for (var j = 0; j < _size; ++j)
+			{
+				var _col = make_colour_rgb(
+					(dcos(_dir) * 0.5 + 0.5) * 255,
+					(dsin(_dir) * 0.5 + 0.5) * 255,
+					0);
+				draw_point_colour(i, j, _col);
+				_dir += _dirStep;
+			}
+		}
+		surface_reset_target();
+		random_set_seed(_seed);
+		var _sprite = sprite_create_from_surface(
+			_sur, 0, 0, _size, _size, false, false, 0, 0);
+		surface_free(_sur);
+		return _sprite;
+	};
+
+	/// @func CreateKernel(_size)
+	///
+	/// @desc Generates a kernel of random vectors to be used for the SSAO.
+	///
+	/// @param {Real} _size Number of vectors in the kernel.
+	///
+	/// @return {Array<Real>} The created kernel as
+	/// `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
+	static CreateKernel = function (_size) {
+		var _seed = random_get_seed();
+		randomize();
+		var _kernel = array_create(_size * 2, 0.0);
+		var _dir = 0;
+		var _dirStep = 360 / _size;
+		for (var i = _size - 1; i >= 0; --i)
+		{
+			var _len = (i + 1) / _size;
+			_kernel[i * 2 + 0] = lengthdir_x(_len, _dir);
+			_kernel[i * 2 + 1] = lengthdir_y(_len, _dir);
 			_dir += _dirStep;
 		}
-	}
-	surface_reset_target();
-	random_set_seed(_seed);
-	var _sprite = sprite_create_from_surface(
-		_sur, 0, 0, _size, _size, false, false, 0, 0);
-	surface_free(_sur);
-	return _sprite;
-}
+		random_set_seed(_seed);
+		return _kernel;
+	};
 
-/// @func ssao_create_kernel(_size)
-///
-/// @desc Generates a kernel of random vectors to be used for the SSAO.
-///
-/// @param {Real} _size Number of vectors in the kernel.
-///
-/// @return {Array} The created kernel as
-/// `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
-///
-/// @private
-function ssao_create_kernel(_size)
-{
-	var _seed = random_get_seed();
-	randomize();
-	var _kernel = array_create(_size * 2, 0.0);
-	var _dir = 0;
-	var _dirStep = 360 / _size;
-	for (var i = _size - 1; i >= 0; --i)
-	{
-		var _len = (i + 1) / _size;
-		_kernel[i * 2 + 0] = lengthdir_x(_len, _dir);
-		_kernel[i * 2 + 1] = lengthdir_y(_len, _dir);
-		_dir += _dirStep;
-	}
-	random_set_seed(_seed);
-	return _kernel;
-}
+	/// @func Render()
+	///
+	/// @desc
+	///
+	/// @return {Struct.SSAO} Returns `self`.
+	static Render = function () {
+		var _tanAspect = [1.0 / MatrixProjection[0], -1.0 / MatrixProjection[5]];
+		var _width = surface_get_width(SurResult);
+		var _height = surface_get_height(SurResult);
 
-/// @func ssao_draw(_radius, _power, _angleBias, _depthRange, _surSsao, _surWork, _surDepth, _matProj, _clipFar)
-///
-/// @desc Renders SSAO into the `_surSsao` surface.
-///
-/// @param {Real} _radius Screen-space radius of the occlusion effect.
-/// @param {Real} _power Strength of the occlusion effect. Should be greater
-/// than 0.
-/// @param {Real} _angleBias Angle bias in radians.
-/// @param {Real} _depthRange Maximum depth difference of samples.
-/// @param {Id.Surface} _surSsao The surface to draw the SSAO to.
-/// @param {Id.Surface} _surWork A working surface used for blurring the SSAO.
-/// Must have the same size as `_surSsao`!
-/// @param {Id.Surface} _surDepth G-buffer surface.
-/// @param {Array<Real>} _matProj The projection matrix used when rendering the
-/// scene.
-/// @param {Real} _clipFar Distance to the far clipping plane (same as in the
-/// projection used when rendering the scene).
-function ssao_draw(
-	_radius,
-	_power,
-	_angleBias,
-	_depthRange,
-	_surSsao,
-	_surWork,
-	_surDepth,
-	_matProj,
-	_clipFar)
-{
-	static _uTexNoise       = shader_get_sampler_index(SSAO_ShMain, "u_texNoise");
-	static _uTexel          = shader_get_uniform(SSAO_ShMain, "u_vTexel");
-	static _uClipFar        = shader_get_uniform(SSAO_ShMain, "u_fClipFar");
-	static _uTanAspect      = shader_get_uniform(SSAO_ShMain, "u_vTanAspect");
-	static _uSampleKernel   = shader_get_uniform(SSAO_ShMain, "u_vSampleKernel");
-	static _uRadius         = shader_get_uniform(SSAO_ShMain, "u_fRadius");
-	static _uPower          = shader_get_uniform(SSAO_ShMain, "u_fPower");
-	static _uNoiseScale     = shader_get_uniform(SSAO_ShMain, "u_vNoiseScale");
-	static _uAngleBias      = shader_get_uniform(SSAO_ShMain, "u_fAngleBias");
-	static _uDepthRange     = shader_get_uniform(SSAO_ShMain, "u_fDepthRange");
-	static _uBlurTexel      = shader_get_uniform(SSAO_ShBlur, "u_vTexel");
-	static _uBlurTexDepth   = shader_get_sampler_index(SSAO_ShBlur, "u_texDepth");
-	static _uBlurClipFar    = shader_get_uniform(SSAO_ShBlur, "u_fClipFar");
-	static _uBlurDepthRange = shader_get_uniform(SSAO_ShBlur, "u_fDepthRange");
+		gpu_push_state();
+		gpu_set_tex_repeat(false);
+		gpu_set_tex_filter(false);
 
-	var _tanAspect = [1.0 / _matProj[0], -1.0 / _matProj[5]];
-	var _width     = surface_get_width(_surSsao);
-	var _height    = surface_get_height(_surSsao);
+		surface_set_target(SurResult);
+		draw_clear(c_white);
+		shader_set(__ShaderMain);
+		texture_set_stage(__UMainTexNoise, sprite_get_texture(__SpriteNoise, 0));
+		gpu_set_texrepeat_ext(__UMainTexNoise, true);
+		shader_set_uniform_f(__UMainTexel, 1.0 / _width, 1.0 / _height);
+		shader_set_uniform_f(__UMainClipFar, ClipFar);
+		shader_set_uniform_f_array(__UMainTanAspect, _tanAspect);
+		shader_set_uniform_f_array(__UMainSampleKernel, __Kernel);
+		shader_set_uniform_f(__UMainRadius, Radius);
+		shader_set_uniform_f(__UMainPower, Power);
+		shader_set_uniform_f(__UMainNoiseScale,
+			_width / __SSAO_NOISE_TEXTURE_SIZE,
+			_height / __SSAO_NOISE_TEXTURE_SIZE);
+		shader_set_uniform_f(__UMainAngleBias, AngleBias);
+		shader_set_uniform_f(__UMainDepthRange, DepthRange);
+		draw_surface_stretched(SurDepth, 0, 0, _width, _height);
+		shader_reset();
+		surface_reset_target();
 
-	gpu_push_state();
-	gpu_set_tex_repeat(false);
-	gpu_set_tex_filter(false);
+		gpu_set_tex_filter(true);
 
-	surface_set_target(_surSsao);
-	draw_clear(c_white);
-	shader_set(SSAO_ShMain);
-	texture_set_stage(_uTexNoise, sprite_get_texture(global.__ssaoNoise, 0));
-	gpu_set_texrepeat_ext(_uTexNoise, true);
-	shader_set_uniform_f(_uTexel, 1.0 / _width, 1.0 / _height);
-	shader_set_uniform_f(_uClipFar, _clipFar);
-	shader_set_uniform_f_array(_uTanAspect, _tanAspect);
-	shader_set_uniform_f_array(_uSampleKernel, global.__ssaoKernel);
-	shader_set_uniform_f(_uRadius, _radius);
-	shader_set_uniform_f(_uPower, _power);
-	shader_set_uniform_f(_uNoiseScale,
-		_width / __SSAO_NOISE_TEXTURE_SIZE,
-		_height / __SSAO_NOISE_TEXTURE_SIZE);
-	shader_set_uniform_f(_uAngleBias, _angleBias);
-	shader_set_uniform_f(_uDepthRange, _depthRange);
-	draw_surface_stretched(_surDepth, 0, 0, _width, _height);
-	shader_reset();
-	surface_reset_target();
+		shader_set(__ShaderBlur);
+		shader_set_uniform_f(__UBlurClipFar, ClipFar);
+		texture_set_stage(__UBlurTexDepth, surface_get_texture(SurDepth));
+		gpu_set_tex_filter_ext(__UBlurTexDepth, false);
+		shader_set_uniform_f(__UBlurDepthRange, BlurDepthRange);
 
-	gpu_set_tex_filter(true);
+		surface_set_target(SurWork);
+		draw_clear(c_black);
+		shader_set_uniform_f(__UBlurTexel, 1.0 / _width, 0.0);
+		draw_surface(SurResult, 0, 0);
+		surface_reset_target();
 
-	shader_set(SSAO_ShBlur);
-	shader_set_uniform_f(_uBlurClipFar, _clipFar);
-	texture_set_stage(_uBlurTexDepth, surface_get_texture(_surDepth));
-	gpu_set_tex_filter_ext(_uBlurTexDepth, false);
-	shader_set_uniform_f(_uBlurDepthRange, 0.1);
+		surface_set_target(SurResult);
+		draw_clear(c_black);
+		shader_set_uniform_f(__UBlurTexel, 0.0, 1.0 / _height);
+		draw_surface(SurWork, 0, 0);
+		surface_reset_target();
 
-	surface_set_target(_surWork);
-	draw_clear(c_black);
-	shader_set_uniform_f(_uBlurTexel, 1.0 / _width, 0.0);
-	draw_surface(_surSsao, 0, 0);
-	surface_reset_target();
+		shader_reset();
 
-	surface_set_target(_surSsao);
-	draw_clear(c_black);
-	shader_set_uniform_f(_uBlurTexel, 0.0, 1.0 / _height);
-	draw_surface(_surWork, 0, 0);
-	surface_reset_target();
+		gpu_pop_state();
 
-	shader_reset();
+		return self;
+	};
 
-	gpu_pop_state();
+	/// @func Destroy()
+	///
+	/// @desc
+	///
+	/// @return {Undefined}
+	static Destroy = function () {
+		sprite_delete(__SpriteNoise);
+		return undefined;
+	};
 }

@@ -40,3 +40,4 @@ if (surface_exists(surSSGI))
 }
 
 ssgi.Destroy();
+ssao.Destroy();
