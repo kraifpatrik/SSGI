@@ -10,6 +10,7 @@ gpu_set_ztestenable(true);
 gpu_set_tex_filter(true);
 gpu_set_tex_mip_enable(mip_on);
 gpu_set_texrepeat(true);
+gpu_set_cullmode(cull_counterclockwise);
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadowmap
@@ -57,7 +58,8 @@ camera_apply(camera);
 
 var _matrixView = matrix_get(matrix_view);
 ssgi.MatrixView = _matrixView;
-ssgi.MatrixProjection = matrix_get(matrix_projection);
+var _matrixProjection = matrix_get(matrix_projection);
+ssgi.MatrixProjection = _matrixProjection;
 var _matrixViewInverse = array_create(16);
 MatrixInverse(_matrixView, _matrixViewInverse);
 
@@ -92,6 +94,12 @@ surface_reset_target();
 gpu_pop_state();
 
 ////////////////////////////////////////////////////////////////////////////////
+// SSAO
+surSSAO = SSGI_SurfaceCheck(surSSAO, _windowWidth, _windowHeight);
+surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
+ssao_draw(64.0, 2.0, 0.03, 1.0, surSSAO, surSSGI, surDepth, _matrixProjection, clipFar);
+
+////////////////////////////////////////////////////////////////////////////////
 // Deferred lighting
 surface_set_target(surLight);
 //draw_clear(c_black);
@@ -102,6 +110,8 @@ texture_set_stage(shader_get_sampler_index(_shader, "u_texDepth"),
 	surface_get_texture(surDepth));
 texture_set_stage(shader_get_sampler_index(_shader, "u_texNormal"),
 	surface_get_texture(surNormal));
+texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
+	surface_get_texture(surSSAO));
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 	clipFar);
 shader_set_uniform_f(shader_get_uniform(_shader, "u_vTanAspect"),
@@ -138,7 +148,7 @@ surface_reset_target();
 
 ////////////////////////////////////////////////////////////////////////////////
 // SSGI
-surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
+//surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
 surWork = SSGI_SurfaceCheck(surWork, _windowWidth / 2, _windowHeight / 2);
 surWork2 = SSGI_SurfaceCheck(surWork2, _windowWidth / 4, _windowHeight / 4);
 surWork3 = SSGI_SurfaceCheck(surWork3, _windowWidth / 8, _windowHeight / 8);

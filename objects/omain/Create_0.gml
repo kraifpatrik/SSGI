@@ -31,6 +31,7 @@ surLight = noone;
 surWork = noone;
 surWork2 = noone;
 surWork3 = noone;
+surSSAO = noone;
 surSSGI = noone;
 
 ssgi = new SSGI();
@@ -38,7 +39,7 @@ ssgi.Fov = fov;
 ssgi.ClipFar = clipFar;
 ssgi.GIDistance = 2.5;
 ssgi.GISteps = 7;
-ssgi.DepthThickness = 0.5;
+ssgi.DepthThickness = 0.8;
 ssgi.BlurDepthRange = 1.0;
 
 giMultiplier = 1.0;
@@ -48,7 +49,7 @@ sunDirection = [0.5, 0.0, -1.0];
 
 shadowmapResolution = 2048;
 shadowmapArea = 64;
-shadowmapNormalOffset = 0.02;
+shadowmapNormalOffset = 0.03;
 shadowmapBias = 0.0;
 shadowmapView = matrix_build_identity();
 shadowmapProjection = matrix_build_identity();

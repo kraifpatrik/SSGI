@@ -159,11 +159,12 @@ void main()
 		{
 			vec3 sampleNormalWorld = normalize(texture2D(u_texNormal, sampleScreen).rgb * 2.0 - 1.0);
 			float dist = length(sampleView - originView);
-			float att = 1.0 - clamp(dist / u_fDistance, 0.0, 1.0);
-			gl_FragColor = vec4(xGammaToLinear(texture2D(u_texLight, sampleScreen).rgb), 1.0)
+			//float att = 1.0 - clamp(dist / u_fDistance, 0.0, 1.0);
+			float att = pow(clamp(1.0 - pow(dist / u_fDistance, 4.0), 0.0, 1.0), 2.0) / (pow(dist, 2.0) + 1.0);
+			gl_FragColor.rgb = xGammaToLinear(texture2D(u_texLight, sampleScreen).rgb)
 				* att
 				* (((sampleView.z - sampleDepth) < u_fThickness) ? 1.0 : 0.0)
-				//* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0)
+				* (dot(originNormalWorld, -sampleNormalWorld) > -0.1 ? 1.0 : 0.0)
 				;
 			gl_FragColor.rgb = xLinearToGamma(gl_FragColor.rgb);
 			break;

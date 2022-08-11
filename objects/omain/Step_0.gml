@@ -141,10 +141,17 @@ if (instance_exists(sphere))
 	sphere.x = x + lengthdir_x(sphereDistance * _dcosDirectionUp, direction);
 	sphere.y = y + lengthdir_y(sphereDistance * _dcosDirectionUp, direction);
 	sphere.z = z - lengthdir_y(sphereDistance, directionUp);
+}
 
-	if (keyboard_check_pressed(vk_backspace))
+if (keyboard_check_pressed(vk_backspace))
+{
+	if (instance_exists(sphere))
 	{
 		instance_destroy(sphere);
 		sphere = noone;
+	}
+	else
+	{
+		instance_destroy(OSphere);
 	}
 }

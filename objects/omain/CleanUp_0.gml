@@ -30,6 +30,10 @@ if (surface_exists(surWork3))
 {
 	surface_free(surWork3);
 }
+if (surface_exists(surSSAO))
+{
+	surface_free(surSSAO);
+}
 if (surface_exists(surSSGI))
 {
 	surface_free(surSSGI);

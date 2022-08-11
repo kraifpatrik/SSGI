@@ -3,7 +3,7 @@ var _windowHeight = window_get_height();
 
 if (!keyboard_check(vk_space))
 {
-	var _shader = ShApplySSGI;
+	var _shader = ShCombineLighting;
 	shader_set(_shader);
 	texture_set_stage(shader_get_sampler_index(_shader, "u_texLight"),
 		surface_get_texture(surLight));
@@ -11,6 +11,8 @@ if (!keyboard_check(vk_space))
 		surface_get_texture(surSSGI));
 	shader_set_uniform_f(shader_get_uniform(_shader, "u_fMultiplier"),
 		giMultiplier);
+	texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
+		surface_get_texture(surSSAO));
 	draw_surface(application_surface, 0, 0);
 	shader_reset();
 }
@@ -25,8 +27,8 @@ if (debug)
 {
 	var _x = 0;
 	var _y = 0;
-	var _width = _windowWidth / 6;
-	var _height = _windowHeight / 6;
+	var _width = _windowWidth / 7;
+	var _height = _windowHeight / 7;
 
 	draw_surface_stretched(surShadowmap, _x, _y, _height, _height);
 	_x += _height;
@@ -38,6 +40,9 @@ if (debug)
 	_x += _width;
 
 	draw_surface_stretched(surNormal, _x, _y, _width, _height);
+	_x += _width;
+
+	draw_surface_stretched(surSSAO, _x, _y, _width, _height);
 	_x += _width;
 
 	draw_surface_stretched(surLight, _x, _y, _width, _height);
