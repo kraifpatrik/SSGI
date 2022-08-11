@@ -1,25 +1,21 @@
 var _windowWidth = window_get_width();
 var _windowHeight = window_get_height();
 
-if (!keyboard_check(vk_space))
-{
-	var _shader = ShCombineLighting;
-	shader_set(_shader);
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texLight"),
-		surface_get_texture(surLight));
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texSSGI"),
-		surface_get_texture(surSSGI));
-	shader_set_uniform_f(shader_get_uniform(_shader, "u_fMultiplier"),
-		giMultiplier);
-	texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
-		surface_get_texture(surSSAO));
-	draw_surface(application_surface, 0, 0);
-	shader_reset();
-}
-else
-{
-	draw_surface(surLight, 0, 0);
-}
+var _useSSGI = !keyboard_check(vk_space);
+var _useSSAO = _useSSGI;
+
+var _shader = ShCombineLighting;
+shader_set(_shader);
+texture_set_stage(shader_get_sampler_index(_shader, "u_texLight"),
+	surface_get_texture(surLight));
+texture_set_stage(shader_get_sampler_index(_shader, "u_texSSGI"),
+	_useSSGI ? surface_get_texture(surSSGI) : sprite_get_texture(SprBlack, 0));
+shader_set_uniform_f(shader_get_uniform(_shader, "u_fMultiplier"),
+	giMultiplier);
+texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
+	_useSSAO ? surface_get_texture(surSSAO) : sprite_get_texture(SprWhite, 0));
+draw_surface(application_surface, 0, 0);
+shader_reset();
 
 ////////////////////////////////////////////////////////////////////////////////
 // Debug

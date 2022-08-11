@@ -1,6 +1,7 @@
 {
   "resources": [
     {"id":{"name":"ShCombineLighting","path":"shaders/ShCombineLighting/ShCombineLighting.yy",},"order":2,},
+    {"id":{"name":"SprBlack","path":"sprites/SprBlack/SprBlack.yy",},"order":1,},
     {"id":{"name":"StringExplode","path":"scripts/StringExplode/StringExplode.yy",},"order":1,},
     {"id":{"name":"CModel","path":"scripts/CModel/CModel.yy",},"order":0,},
     {"id":{"name":"CMaterial","path":"scripts/CMaterial/CMaterial.yy",},"order":3,},
@@ -14,6 +15,7 @@
     {"id":{"name":"MatrixInverse","path":"scripts/MatrixInverse/MatrixInverse.yy",},"order":5,},
     {"id":{"name":"FntOpenSans24Bold","path":"fonts/FntOpenSans24Bold/FntOpenSans24Bold.yy",},"order":0,},
     {"id":{"name":"SprBestFitNormals","path":"sprites/SprBestFitNormals/SprBestFitNormals.yy",},"order":0,},
+    {"id":{"name":"SprWhite","path":"sprites/SprWhite/SprWhite.yy",},"order":2,},
     {"id":{"name":"StringSplitOnFirst","path":"scripts/StringSplitOnFirst/StringSplitOnFirst.yy",},"order":2,},
     {"id":{"name":"SSAO_ShMain","path":"shaders/SSAO_ShMain/SSAO_ShMain.yy",},"order":1,},
     {"id":{"name":"SSAO_ShBlur","path":"shaders/SSAO_ShBlur/SSAO_ShBlur.yy",},"order":2,},
