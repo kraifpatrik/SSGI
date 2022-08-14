@@ -82,9 +82,10 @@ model.Submit()
 with (OSphere)
 {
 	shader_set_uniform_f(_uEmissive,
-		color_get_red(color) / 255,
-		color_get_green(color) / 255,
-		color_get_blue(color) / 255);
+		color[0] / 255.0,
+		color[1] / 255.0,
+		color[2] / 255.0,
+		color[3]);
 	matrix_set(matrix_world, matrix_build(x, y, z, 0, 0, 0, scale, scale, scale));
 	_modelSphere.Submit();
 }

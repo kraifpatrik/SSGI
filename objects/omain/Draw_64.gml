@@ -66,6 +66,11 @@ case EDisplayMode.Final:
 //
 // GUI
 //
+if (screenshotMode)
+{
+	exit;
+}
+
 var _text = "FPS: " + string(fps) + " (" + string(fps_real) + ")";
 draw_text_color(_windowWidth - string_width(_text) - 8, 8, _text,
 	c_silver, c_silver, c_silver, c_silver, 1.0);
@@ -296,6 +301,112 @@ if (guiShow)
 			Min: 0.01,
 			Max: 1.0,
 			OnChange: method(ssao, function (_value) { BlurDepthRange = _value; }),
+		})
+		.Newline()
+		;
+
+	////////////////////////////////////////////////////////////////////////////
+	// Emissive spheres
+	var _sphereExists = instance_exists(sphere);
+
+	gui.Text("Emissive spheres:")
+		.Newline()
+		.Slider("sphere-color-r", _sphereExists ? sphere.color[0] : 0.0, {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) {
+				if (instance_exists(sphere))
+				{
+					sphere.color[@ 0] = _value;
+				}
+			}),
+		})
+		.Move(7)
+		.Slider("sphere-color-g", _sphereExists ? sphere.color[1] : 0.0, {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) {
+				if (instance_exists(sphere))
+				{
+					sphere.color[@ 1] = _value;
+				}
+			}),
+		})
+		.Move(7)
+		.Slider("sphere-color-b", _sphereExists ? sphere.color[2] : 0.0, {
+			Label: "Color",
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) {
+				if (instance_exists(sphere))
+				{
+					sphere.color[@ 2] = _value;
+				}
+			}),
+		})
+		.Newline()
+		.Slider("sphere-color-a", _sphereExists ? sphere.color[3] : 0.0, {
+			Label: "Intensity",
+			OnChange: method(self, function (_value) {
+				if (instance_exists(sphere))
+				{
+					sphere.color[@ 3] = _value;
+				}
+			}),
+		})
+		.Newline()
+		.Slider("sphere-distance", sphereDistance, {
+			Label: "Distance",
+			Min: 1.0,
+			Max: 20.0,
+			OnChange: method(self, function (_value) { sphereDistance = _value; }),
+		})
+		.Newline()
+		.Button("Spawn", {
+			Width: 100,
+			OnClick: method(self, function () {
+				sphere = instance_create_layer(0, 0, layer, OSphere);
+			}),
+		})
+		.Newline()
+		.Button("Place", {
+			Width: 100,
+			OnClick: method(self, function () {
+				sphere = noone;
+			}),
+		})
+		.Newline()
+		.Button("Destroy", {
+			Width: 100,
+			OnClick: method(self, function () {
+				if (instance_exists(sphere))
+				{
+					instance_destroy(sphere);
+					sphere = noone;
+				}
+				else
+				{
+					with (OSphere)
+					{
+						instance_destroy();
+						break;
+					}
+				}
+			}),
+		})
+		.Newline()
+		.Button("Destroy all", {
+			Width: 100,
+			OnClick: method(self, function () {
+				instance_destroy(OSphere);
+				sphere = noone;
+			}),
 		})
 		.Newline()
 		;

@@ -35,7 +35,7 @@ surSSGI = noone;
 ssgi = new SSGI();
 ssgi.ClipFar = clipFar;
 ssgi.GIDistance = 2.5;
-ssgi.GISteps = 7;
+ssgi.GISteps = 12;
 ssgi.DepthThickness = 0.8;
 ssgi.BlurDepthRange = 1.0;
 ssgiEnabled = true;
@@ -47,11 +47,11 @@ ssao.Power = 2.0;
 ssao.ClipFar = clipFar;
 ssaoEnabled = true;
 
+ambientColor = [255, 255, 255, 0.2];
+
 sunPosition = [0.0, 0.0, 0.0];
 sunDirection = [0.5, 0.0, -1.0];
 sunColor = [255, 255, 255, 1.0];
-
-ambientColor = [255, 255, 255, 0.2];
 
 shadowmapResolution = 2048;
 shadowmapArea = 64;
@@ -96,3 +96,5 @@ displayModeNames = [
 ];
 
 displayMode = EDisplayMode.Final;
+
+screenshotMode = false;

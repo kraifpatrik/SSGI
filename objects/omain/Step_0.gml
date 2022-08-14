@@ -1,15 +1,5 @@
-if (keyboard_check_pressed(vk_f1))
-{
-	guiShow = !guiShow;
-}
-
-if (keyboard_check_pressed(vk_space))
-{
-	ssgiEnabled = !ssgiEnabled;
-}
-
 ////////////////////////////////////////////////////////////////////////////////
-// Camera controls
+// Controls
 var _mouseX = window_mouse_get_x();
 var _mouseY = window_mouse_get_y();
 
@@ -68,6 +58,14 @@ ssgi.Fov = fov;
 camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 	-fov, -_aspectRatio, 0.1, clipFar));
 
+if (instance_exists(sphere))
+{
+	var _dcosDirectionUp = dcos(directionUp);
+	sphere.x = x + lengthdir_x(sphereDistance * _dcosDirectionUp, direction);
+	sphere.y = y + lengthdir_y(sphereDistance * _dcosDirectionUp, direction);
+	sphere.z = z - lengthdir_y(sphereDistance, directionUp);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Shadowmap
 shadowmapView = matrix_build_lookat(
@@ -83,37 +81,19 @@ shadowmapProjection = matrix_build_projection_ortho(
 shadowmapViewProjection = matrix_multiply(shadowmapView, shadowmapProjection);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Spawn spheres
-if (mouse_check_button_pressed(mb_left)
-	&& !gui.MouseOverUI)
+if (keyboard_check_pressed(vk_f1))
 {
-	sphere = instance_create_layer(0, 0, layer, OSphere);
+	guiShow = !guiShow;
 }
 
-if (instance_exists(sphere))
+if (keyboard_check_pressed(vk_f2))
 {
-	if (!keyboard_check(vk_control))
-	{
-		sphereDistance += (mouse_wheel_up() - mouse_wheel_down()) * 0.25;
-	}
-
-	var _dcosDirectionUp = dcos(directionUp);
-	sphere.x = x + lengthdir_x(sphereDistance * _dcosDirectionUp, direction);
-	sphere.y = y + lengthdir_y(sphereDistance * _dcosDirectionUp, direction);
-	sphere.z = z - lengthdir_y(sphereDistance, directionUp);
+	screenshotMode = !screenshotMode;
 }
 
-if (keyboard_check_pressed(vk_backspace))
+if (keyboard_check_pressed(vk_space))
 {
-	if (instance_exists(sphere))
-	{
-		instance_destroy(sphere);
-		sphere = noone;
-	}
-	else
-	{
-		instance_destroy(OSphere);
-	}
+	ssgiEnabled = !ssgiEnabled;
 }
 
 gui.Update();

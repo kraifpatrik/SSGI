@@ -88,6 +88,29 @@ function CGUI() constructor
 		return self;
 	};
 
+	/// @func DrawTextShadow(_text[, _color[, _alpha[, _shadowColor[, _shadowAlpha]]]])
+	///
+	/// @desc
+	///
+	/// @param {String} _text
+	/// @param {Constant.Color} [_color]
+	/// @param {Real} [_alpha]
+	/// @param {Constant.Color} [_shadowColor]
+	/// @param {Real} [_shadowAlpha]
+	///
+	/// @return {Struct.CGUI} Returns `self`.
+	static DrawTextShadow = function (_text, _color=c_white, _alpha=1.0, _shadowColor=c_black, _shadowAlpha=1.0) {
+		gml_pragma("forceinline");
+		var _textY = DrawY + floor((LineHeight - string_height(_text)) / 2);
+		if (_shadowAlpha > 0.0)
+		{
+			draw_text_color(DrawX + 1, _textY + 1, _text,
+				_shadowColor, _shadowColor, _shadowColor, _shadowColor, _shadowAlpha);
+		}
+		draw_text_color(DrawX, _textY, _text, _color, _color, _color, _color, _alpha);
+		return self;
+	};
+
 	/// @func Text(_text[, _props])
 	///
 	/// @desc
@@ -98,11 +121,7 @@ function CGUI() constructor
 	/// @return {Struct.CGUI} Returns `self.`
 	static Text = function (_text, _props={}) {
 		var _color = _props[$ "Color"] ?? c_white;
-		draw_text_color(
-			DrawX,
-			DrawY + floor((LineHeight - string_height(_text)) / 2),
-			_text,
-			_color, _color, _color, _color, 1.0);
+		DrawTextShadow(_text, _color);
 		return self;
 	};
 
@@ -193,12 +212,7 @@ function CGUI() constructor
 		if (_label != undefined)
 		{
 			DrawX += 8;
-
-			draw_text(
-				DrawX,
-				DrawY + floor((_height - string_height(_label)) / 2),
-				_label);
-
+			DrawTextShadow(_label);
 			DrawX += string_width(_label);
 		}
 
@@ -282,12 +296,7 @@ function CGUI() constructor
 		if (_label != undefined)
 		{
 			DrawX += 8;
-
-			draw_text(
-				DrawX,
-				DrawY + floor((_height - string_height(_label)) / 2),
-				_label);
-
+			DrawTextShadow(_label);
 			DrawX += string_width(_label);
 		}
 

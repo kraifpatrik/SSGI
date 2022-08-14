@@ -1,3 +1,3 @@
 z = 0;
-color = make_color_hsv(irandom(255), 255, 255);
+color = [255, 255, 255, 1.0];
 scale = 0.25;

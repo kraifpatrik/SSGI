@@ -27,8 +27,8 @@ function SSAO() constructor
 	DepthRange = 1.0;
 
 	/// @var {Real} Maximum depth difference of samples when blurring SSAO.
-	/// Default value is 0.1.
-	BlurDepthRange = 0.1;
+	/// Default value is 0.2.
+	BlurDepthRange = 0.2;
 
 	/// @var {Id.Sprite}
 	/// @private
