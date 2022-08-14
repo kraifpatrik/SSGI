@@ -1,8 +1,12 @@
 if (keyboard_check_pressed(vk_f1))
 {
-	debug = !debug;
+	guiShow = !guiShow;
 }
-show_debug_overlay(debug);
+
+if (keyboard_check_pressed(vk_space))
+{
+	ssgiEnabled = !ssgiEnabled;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Camera controls
@@ -59,21 +63,13 @@ camera_set_view_mat(camera, matrix_build_lookat(
 
 var _aspectRatio = window_get_width() / window_get_height();
 ssgi.AspectRatio = _aspectRatio;
+ssgi.Fov = fov;
 
 camera_set_proj_mat(camera, matrix_build_projection_perspective_fov(
 	-fov, -_aspectRatio, 0.1, clipFar));
 
 ////////////////////////////////////////////////////////////////////////////////
 // Shadowmap
-if (keyboard_check(ord("X")))
-{
-	sunDirection = [
-		_directionX,
-		_directionY,
-		_directionZ,
-	];
-}
-
 shadowmapView = matrix_build_lookat(
 	sunPosition[0],
 	sunPosition[1],
@@ -87,45 +83,9 @@ shadowmapProjection = matrix_build_projection_ortho(
 shadowmapViewProjection = matrix_multiply(shadowmapView, shadowmapProjection);
 
 ////////////////////////////////////////////////////////////////////////////////
-// Control GI
-if (keyboard_check(vk_control))
-{
-	var _wheel = mouse_wheel_up() - mouse_wheel_down();
-
-	if (keyboard_check_pressed(ord("1")))
-	{
-		ssgi.HalfRes = !ssgi.HalfRes;
-	}
-
-	if (keyboard_check(ord("2")))
-	{
-		ssgi.GIDistance += _wheel * 0.5;
-	}
-
-	if (keyboard_check(ord("3")))
-	{
-		ssgi.GISteps += _wheel;
-	}
-
-	if (keyboard_check(ord("4")))
-	{
-		ssgi.DepthThickness += _wheel * 0.1;
-	}
-
-	if (keyboard_check(ord("5")))
-	{
-		ssgi.BlurDepthRange += _wheel * 0.1;
-	}
-
-	if (keyboard_check(ord("6")))
-	{
-		giMultiplier += _wheel * 0.25;
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////
 // Spawn spheres
-if (mouse_check_button_pressed(mb_left))
+if (mouse_check_button_pressed(mb_left)
+	&& !gui.MouseOverUI)
 {
 	sphere = instance_create_layer(0, 0, layer, OSphere);
 }
@@ -155,3 +115,5 @@ if (keyboard_check_pressed(vk_backspace))
 		instance_destroy(OSphere);
 	}
 }
+
+gui.Update();

@@ -10,6 +10,7 @@ uniform vec2 u_vTanAspect;
 uniform mat4 u_mViewInverse;
 
 uniform vec3 u_vSunDirection;
+uniform vec4 u_vSunColor;
 
 #define SHADOWMAP_SAMPLE_COUNT 12
 uniform sampler2D u_texShadowmap;
@@ -118,7 +119,7 @@ void main()
 	vertexShadowmap.y = 1.0 - vertexShadowmap.y;
 	vertexShadowmap.z /= u_fShadowmapArea;
 	float shadow = ShadowMap(u_texShadowmap, u_vShadowmapTexel, vertexShadowmap.xy, vertexShadowmap.z);
-	lightDiffuse += vec3(1.0) * max(dot(normal, L), 0.0) * (1.0 - shadow);
+	lightDiffuse += xGammaToLinear(u_vSunColor.rgb * u_vSunColor.a) * max(dot(normal, L), 0.0) * (1.0 - shadow);
 
 	//L = u_vCameraPosition - vertexWorld;
 	//float dist = length(L);

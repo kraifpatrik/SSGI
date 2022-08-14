@@ -1,87 +1,302 @@
 var _windowWidth = window_get_width();
-var _windowHeight = window_get_height();
+//var _windowHeight = window_get_height();
 
-var _useSSGI = !keyboard_check(vk_space);
-var _useSSAO = _useSSGI;
-
-var _shader = ShCombineLighting;
-shader_set(_shader);
-texture_set_stage(shader_get_sampler_index(_shader, "u_texLight"),
-	surface_get_texture(surLight));
-texture_set_stage(shader_get_sampler_index(_shader, "u_texSSGI"),
-	_useSSGI ? surface_get_texture(surSSGI) : sprite_get_texture(SprBlack, 0));
-shader_set_uniform_f(shader_get_uniform(_shader, "u_fMultiplier"),
-	giMultiplier);
-texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
-	_useSSAO ? surface_get_texture(surSSAO) : sprite_get_texture(SprWhite, 0));
-draw_surface(application_surface, 0, 0);
-shader_reset();
-
-////////////////////////////////////////////////////////////////////////////////
-// Debug
-if (debug)
+switch (displayMode)
 {
-	var _x = 0;
-	var _y = 0;
-	var _width = _windowWidth / 7;
-	var _height = _windowHeight / 7;
+case EDisplayMode.BaseColor:
+	draw_surface(application_surface, 0, 0);
+	break;
 
-	draw_surface_stretched(surShadowmap, _x, _y, _height, _height);
-	_x += _height;
+case EDisplayMode.Depth:
+	draw_surface(surDepth, 0, 0);
+	break;
 
-	draw_surface_stretched(application_surface, _x, _y, _width, _height);
-	_x += _width;
+case EDisplayMode.Normal:
+	draw_surface(surNormal, 0, 0);
+	break;
 
-	draw_surface_stretched(surDepth, _x, _y, _width, _height);
-	_x += _width;
+case EDisplayMode.Light:
+	draw_surface(surLight, 0, 0);
+	break;
 
-	draw_surface_stretched(surNormal, _x, _y, _width, _height);
-	_x += _width;
+case EDisplayMode.SSAO:
+	if (ssaoEnabled)
+	{
+		draw_surface(surSSAO, 0, 0);
+	}
+	else
+	{
+		draw_clear(c_black);
+	}
+	break;
 
-	draw_surface_stretched(surSSAO, _x, _y, _width, _height);
-	_x += _width;
+case EDisplayMode.SSGI:
+	if (ssgiEnabled)
+	{
+		draw_surface(surSSGI, 0, 0);
+	}
+	else
+	{
+		draw_clear(c_black);
+	}
+	break;
 
-	draw_surface_stretched(surLight, _x, _y, _width, _height);
-	_x += _width;
-
-	draw_surface_stretched(surSSGI, _x, _y, _width, _height);
-	_x += _width;
+case EDisplayMode.Final:
+	var _shader = ShCombineLighting;
+	shader_set(_shader);
+	texture_set_stage(shader_get_sampler_index(_shader, "u_texLight"),
+		surface_get_texture(surLight));
+	texture_set_stage(shader_get_sampler_index(_shader, "u_texSSGI"),
+		ssgiEnabled ? surface_get_texture(surSSGI) : sprite_get_texture(SprBlack, 0));
+	shader_set_uniform_f(shader_get_uniform(_shader, "u_fMultiplier"),
+		ssgiMultiplier);
+	texture_set_stage(shader_get_sampler_index(_shader, "u_texSSAO"),
+		ssaoEnabled ? surface_get_texture(surSSAO) : sprite_get_texture(SprWhite, 0));
+	shader_set_uniform_f(shader_get_uniform(_shader, "u_vAmbientColor"),
+		ambientColor[0] / 255.0,
+		ambientColor[1] / 255.0,
+		ambientColor[2] / 255.0,
+		ambientColor[3]);
+	draw_surface(application_surface, 0, 0);
+	shader_reset();
+	break;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Controls
-if (keyboard_check(vk_control))
+//
+// GUI
+//
+var _text = "FPS: " + string(fps) + " (" + string(fps_real) + ")";
+draw_text_color(_windowWidth - string_width(_text) - 8, 8, _text,
+	c_silver, c_silver, c_silver, c_silver, 1.0);
+
+gui.SetPosition(8, 8)
+	.Checkbox(guiShow, {
+		Label: "Show UI (F1)",
+		OnChange: method(self, function (_value) { guiShow = _value; }),
+	})
+	.Newline();
+
+if (guiShow)
 {
-	var _text =
-		  "[Ctrl+1] HalfRes: " + (ssgi.HalfRes ? "true" : "false") + "\n"
-		+ "[Ctrl+2+MouseWheel] Distance: " + string(ssgi.GIDistance) + "\n"
-		+ "[Ctrl+3+MouseWheel] Steps: " + string(ssgi.GISteps) + "\n"
-		+ "[Ctrl+4+MouseWheel] Depth thickness: " + string(ssgi.DepthThickness) + "\n"
-		+ "[Ctrl+5+MouseWheel] Blur depth range: " + string(ssgi.BlurDepthRange) + "\n"
-		+ "[Ctrl+6+MouseWheel] Multiplier: " + string(giMultiplier) + "\n"
-		+ "Hold [Space] to hide SSGI\n"
+	gui.Slider("camera-fov", fov, {
+			Label: "Camera FoV",
+			Min: 1,
+			Max: 90,
+			Round: true,
+			OnChange: method(self, function (_value) { fov = _value; }),
+		})
+		.Newline()
+		.Button("<", {
+			OnClick: method(self, function () {
+				if (--displayMode < 0)
+				{
+					displayMode = EDisplayMode.SIZE - 1;
+				}
+			}),
+		})
+		.Move(7)
+		.Input(undefined, displayModeNames[displayMode], {
+			Width: 156,
+		})
+		.Move(7)
+		.Button(">", {
+			OnClick: method(self, function () {
+				if (++displayMode >= EDisplayMode.SIZE)
+				{
+					displayMode = 0;
+				}
+			}),
+		})
+		.Move(8)
+		.Text("Display mode")
+		.Newline()
 		;
 
-	draw_text(16, 16, _text);
+	////////////////////////////////////////////////////////////////////////////
+	// Lighting
+	gui.Text("Lighting:")
+		.Newline()
+		// Directional
+		.Slider("sun-direction-x", sunDirection[0], {
+			Width: 62,
+			Min: -1.0,
+			Max: 1.0,
+			OnChange: method(self, function (_value) { sunDirection[@ 0] = _value; }),
+		})
+		.Move(7)
+		.Slider("sun-direction-y", sunDirection[1], {
+			Width: 62,
+			Min: -1.0,
+			Max: 1.0,
+			OnChange: method(self, function (_value) { sunDirection[@ 1] = _value; }),
+		})
+		.Move(7)
+		.Slider("sun-direction-z", sunDirection[2], {
+			Label: "Sun direction",
+			Width: 62,
+			Min: -1.0,
+			Max: 1.0,
+			OnChange: method(self, function (_value) { sunDirection[@ 2] = _value; }),
+		})
+		.Newline()
+		.Slider("sun-color-r", sunColor[0], {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { sunColor[@ 0] = _value; }),
+		})
+		.Move(7)
+		.Slider("sun-color-g", sunColor[1], {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { sunColor[@ 1] = _value; }),
+		})
+		.Move(7)
+		.Slider("sun-color-b", sunColor[2], {
+			Label: "Sun color",
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { sunColor[@ 2] = _value; }),
+		})
+		.Newline()
+		.Slider("sun-color-a", sunColor[3], {
+			Label: "Sun intensity",
+			OnChange: method(self, function (_value) { sunColor[@ 3] = _value; }),
+		})
+		.Newline()
+		// Ambient
+		.Slider("ambient-color-r", ambientColor[0], {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { ambientColor[@ 0] = _value; }),
+		})
+		.Move(7)
+		.Slider("ambient-color-g", ambientColor[1], {
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { ambientColor[@ 1] = _value; }),
+		})
+		.Move(7)
+		.Slider("ambient-color-b", ambientColor[2], {
+			Label: "Ambient color",
+			Width: 62,
+			Min: 0,
+			Max: 255,
+			Round: true,
+			OnChange: method(self, function (_value) { ambientColor[@ 2] = _value; }),
+		})
+		.Newline()
+		.Slider("ambient-color-a", ambientColor[3], {
+			Label: "Ambient intensity",
+			OnChange: method(self, function (_value) { ambientColor[@ 3] = _value; }),
+		})
+		.Newline()
+		;
+
+	////////////////////////////////////////////////////////////////////////////
+	// SSGI
+	gui.Text("SSGI:")
+		.Newline()
+		.Checkbox(ssgiEnabled, {
+			Label: "Enabled (Space)",
+			OnChange: method(self, function (_value) { ssgiEnabled = _value; }),
+		})
+		.Newline()
+		.Checkbox(ssgi.HalfRes, {
+			Label: "Half resolution",
+			OnChange: method(ssgi, function (_value) { HalfRes = _value; }),
+		})
+		.Newline()
+		.Slider("ssgi-distance", ssgi.GIDistance, {
+			Label: "Distance",
+			Min: 0.01,
+			Max: 16.0,
+			OnChange: method(ssgi, function (_value) { GIDistance = _value; }),
+		})
+		.Newline()
+		.Slider("ssgi-steps", ssgi.GISteps, {
+			Label: "Steps",
+			Min: 1,
+			Max: 64,
+			Round: true,
+			OnChange: method(ssgi, function (_value) { GISteps = _value; }),
+		})
+		.Newline()
+		.Slider("ssgi-depth-thickness", ssgi.DepthThickness, {
+			Label: "Depth buffer thickness",
+			Min: 0.1,
+			Max: 2.0,
+			OnChange: method(ssgi, function (_value) { DepthThickness = _value; }),
+		})
+		.Newline()
+		.Slider("ssgi-blur-depth-range", ssgi.BlurDepthRange, {
+			Label: "Blur depth range",
+			Min: 0.1,
+			Max: 2.0,
+			OnChange: method(ssgi, function (_value) { BlurDepthRange = _value; }),
+		})
+		.Newline()
+		.Slider("gi-multiplier", ssgiMultiplier, {
+			Label: "Multiplier",
+			Min: 0.0,
+			Max: 5.0,
+			OnChange: method(self, function (_value) { ssgiMultiplier = _value; }),
+		})
+		.Newline()
+		;
+
+	////////////////////////////////////////////////////////////////////////////
+	// SSAO
+	gui.Text("SSAO:")
+		.Newline()
+		.Checkbox(ssaoEnabled, {
+			Label: "Enabled",
+			OnChange: method(self, function (_value) { ssaoEnabled = _value; }),
+		})
+		.Newline()
+		.Slider("ssao-radius", ssao.Radius, {
+			Label: "Radius",
+			Min: 1,
+			Max: 128,
+			Round: true,
+			OnChange: method(ssao, function (_value) { Radius = _value; }),
+		})
+		.Newline()
+		.Slider("ssao-power", ssao.Power, {
+			Label: "Power",
+			Min: 0.1,
+			Max: 10.0,
+			OnChange: method(ssao, function (_value) { Power = _value; }),
+		})
+		.Newline()
+		.Slider("ssao-angle-bias", ssao.AngleBias, {
+			Label: "Angle bias",
+			OnChange: method(ssao, function (_value) { AngleBias = _value; }),
+		})
+		.Newline()
+		.Slider("ssao-depth-range", ssao.DepthRange, {
+			Label: "Depth range",
+			Min: 0.01,
+			Max: 10.0,
+			OnChange: method(ssao, function (_value) { DepthRange = _value; }),
+		})
+		.Newline()
+		.Slider("ssao-blur-depth-range", ssao.BlurDepthRange, {
+			Label: "Blur depth range",
+			Min: 0.01,
+			Max: 1.0,
+			OnChange: method(ssao, function (_value) { BlurDepthRange = _value; }),
+		})
+		.Newline()
+		;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-// Text
-var _font = draw_get_font();
-var _halign = draw_get_halign();
-var _valign = draw_get_valign();
-
-draw_set_font(FntOpenSans24Bold);
-draw_set_halign(fa_right);
-draw_set_valign(fa_bottom);
-
-var _x = _windowWidth - 16;
-var _y = _windowHeight - 16;
-var _text = keyboard_check(vk_space) ? "SSGI OFF" : "SSGI ON";
-
-draw_text_color(_x + 2, _y + 2, _text, c_black, c_black, c_black, c_black, 1.0);
-draw_text(_x, _y, _text);
-
-draw_set_font(_font);
-draw_set_halign(_halign);
-draw_set_valign(_valign);

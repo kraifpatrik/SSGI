@@ -2,8 +2,6 @@ randomize();
 application_surface_enable(true);
 application_surface_draw_enable(false);
 
-debug = false;
-
 camera = camera_create();
 clipFar = 512.0;
 fov = 60.0;
@@ -35,22 +33,25 @@ surSSAO = noone;
 surSSGI = noone;
 
 ssgi = new SSGI();
-ssgi.Fov = fov;
 ssgi.ClipFar = clipFar;
 ssgi.GIDistance = 2.5;
 ssgi.GISteps = 7;
 ssgi.DepthThickness = 0.8;
 ssgi.BlurDepthRange = 1.0;
-
-giMultiplier = 1.0;
+ssgiEnabled = true;
+ssgiMultiplier = 1.0;
 
 ssao = new SSAO();
 ssao.Radius = 64.0;
 ssao.Power = 2.0;
 ssao.ClipFar = clipFar;
+ssaoEnabled = true;
 
 sunPosition = [0.0, 0.0, 0.0];
 sunDirection = [0.5, 0.0, -1.0];
+sunColor = [255, 255, 255, 1.0];
+
+ambientColor = [255, 255, 255, 0.2];
 
 shadowmapResolution = 2048;
 shadowmapArea = 64;
@@ -66,3 +67,32 @@ modelSphere = new CModel()
 
 sphere = noone;
 sphereDistance = 2.0;
+
+gui = new CGUI();
+guiShow = false;
+
+draw_set_font(FntOpenSans10);
+
+enum EDisplayMode
+{
+	BaseColor,
+	Depth,
+	Normal,
+	Light,
+	SSAO,
+	SSGI,
+	Final,
+	SIZE
+};
+
+displayModeNames = [
+	"BaseColor",
+	"Depth",
+	"Normal",
+	"Light",
+	"SSAO",
+	"SSGI",
+	"Final",
+];
+
+displayMode = EDisplayMode.Final;

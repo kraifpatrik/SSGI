@@ -65,12 +65,15 @@ MatrixInverse(_matrixView, _matrixViewInverse);
 
 _shader = ShGBuffer;
 var _uEmissive = shader_get_uniform(_shader, "u_vEmissive");
+var _uBestFitNormals = shader_get_sampler_index(_shader, "u_texBestFitNormals");
 
 shader_set(_shader);
 shader_set_uniform_f(shader_get_uniform(_shader, "u_fClipFar"),
 	clipFar);
-texture_set_stage(shader_get_sampler_index(_shader, "u_texBestFitNormals"),
+texture_set_stage(_uBestFitNormals,
 	sprite_get_texture(SprBestFitNormals, 0));
+gpu_set_tex_filter_ext(_uBestFitNormals, false);
+gpu_set_tex_mip_enable_ext(_uBestFitNormals, false);
 
 shader_set_uniform_f(_uEmissive, 0.0, 0.0, 0.0);
 matrix_set(matrix_world, modelMatrix);
@@ -96,13 +99,17 @@ gpu_pop_state();
 ////////////////////////////////////////////////////////////////////////////////
 // SSAO
 surSSAO = SSGI_SurfaceCheck(surSSAO, _windowWidth, _windowHeight);
+// Note: Using the SSGI surface here as a temp. working surface
 surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
 
-ssao.MatrixProjection = _matrixProjection;
-ssao.SurResult = surSSAO;
-ssao.SurWork = surSSGI; // Using the SSGI surface here as a temp. working surface
-ssao.SurDepth = surDepth;
-ssao.Render();
+if (ssaoEnabled)
+{
+	ssao.MatrixProjection = _matrixProjection;
+	ssao.SurResult = surSSAO;
+	ssao.SurWork = surSSGI;
+	ssao.SurDepth = surDepth;
+	ssao.Render();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Deferred lighting
@@ -126,6 +133,11 @@ shader_set_uniform_matrix_array(shader_get_uniform(_shader, "u_mViewInverse"),
 
 shader_set_uniform_f_array(shader_get_uniform(_shader, "u_vSunDirection"),
 	sunDirection);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vSunColor"),
+	sunColor[0] / 255.0,
+	sunColor[1] / 255.0,
+	sunColor[2] / 255.0,
+	sunColor[3]);
 
 texture_set_stage(shader_get_sampler_index(_shader, "u_texShadowmap"),
 	surface_get_texture(surShadowmap));
@@ -153,16 +165,18 @@ surface_reset_target();
 
 ////////////////////////////////////////////////////////////////////////////////
 // SSGI
-//surSSGI = SSGI_SurfaceCheck(surSSGI, _windowWidth, _windowHeight);
 surWork = SSGI_SurfaceCheck(surWork, _windowWidth / 2, _windowHeight / 2);
 surWork2 = SSGI_SurfaceCheck(surWork2, _windowWidth / 4, _windowHeight / 4);
 surWork3 = SSGI_SurfaceCheck(surWork3, _windowWidth / 8, _windowHeight / 8);
 
-ssgi.SurLight = surLight;
-ssgi.TextureDepth = surface_get_texture(surDepth);
-ssgi.TextureNormals = surface_get_texture(surNormal);
-ssgi.SurResult = surSSGI;
-ssgi.SurHalf = surWork;
-ssgi.SurQuarter = surWork2;
-ssgi.SurEighth = surWork3;
-ssgi.Render();
+if (ssgiEnabled)
+{
+	ssgi.SurLight = surLight;
+	ssgi.TextureDepth = surface_get_texture(surDepth);
+	ssgi.TextureNormals = surface_get_texture(surNormal);
+	ssgi.SurResult = surSSGI;
+	ssgi.SurHalf = surWork;
+	ssgi.SurQuarter = surWork2;
+	ssgi.SurEighth = surWork3;
+	ssgi.Render();
+}

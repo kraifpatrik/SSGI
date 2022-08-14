@@ -3,6 +3,7 @@ uniform sampler2D u_texLight;
 uniform sampler2D u_texSSGI;
 uniform float u_fMultiplier;
 uniform sampler2D u_texSSAO;
+uniform vec4 u_vAmbientColor;
 
 varying vec2 v_vTexCoord;
 
@@ -29,7 +30,7 @@ void main()
 {
 	vec3 baseColor = xGammaToLinear(texture2D(u_texBaseColor, v_vTexCoord).rgb);
 	gl_FragColor.rgb =
-		  (baseColor * xGammaToLinear(vec3(0.1)))
+		  (baseColor * xGammaToLinear(u_vAmbientColor.rgb * u_vAmbientColor.a))
 		+ (baseColor * xGammaToLinear(texture2D(u_texSSGI, v_vTexCoord).rgb) * u_fMultiplier)
 		;
 	gl_FragColor.rgb = TonemapReinhard(gl_FragColor.rgb);
