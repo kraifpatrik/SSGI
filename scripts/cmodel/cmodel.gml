@@ -21,7 +21,8 @@ function CModel() constructor
 	/// @var {Id.DsMap, Undefined}
 	Sprites = undefined;
 
-	static __LoadMaterials = function (_path) {
+	static __LoadMaterials = function (_path)
+	{
 		var _file = file_text_open_read(_path);
 		if (_file == -1)
 		{
@@ -45,22 +46,55 @@ function CModel() constructor
 				_materials[? _split[1]] = _material;
 				break;
 
-			// Diffuse texture
+			// BaseColor texture
 			case "map_Kd":
-				var _spritePath = filename_path(_path) + _split[1];
-				if (Sprites == undefined)
 				{
-					Sprites = ds_map_create();
-				}
-				if (!ds_map_exists(Sprites, _spritePath))
-				{
-					if (!file_exists(_spritePath))
+					var _spritePath = filename_path(_path) + _split[1];
+					Sprites ??= ds_map_create();
+					if (!ds_map_exists(Sprites, _spritePath))
 					{
-						throw "File " + _spritePath + " does not exist!";
+						if (!file_exists(_spritePath))
+						{
+							throw "File " + _spritePath + " does not exist!";
+						}
+						Sprites[? _spritePath] = sprite_add(_spritePath, 1, false, false, 0, 0);
 					}
-					Sprites[? _spritePath] = sprite_add(_spritePath, 1, false, false, 0, 0);
+					_material.BaseColor = sprite_get_texture(Sprites[? _spritePath], 0);
 				}
-				_material.Texture = sprite_get_texture(Sprites[? _spritePath], 0);
+				break;
+
+			// MetallicRoughness texture
+			case "map_Pmr":
+				{
+					var _spritePath = filename_path(_path) + _split[1];
+					Sprites ??= ds_map_create();
+					if (!ds_map_exists(Sprites, _spritePath))
+					{
+						if (!file_exists(_spritePath))
+						{
+							throw "File " + _spritePath + " does not exist!";
+						}
+						Sprites[? _spritePath] = sprite_add(_spritePath, 1, false, false, 0, 0);
+					}
+					_material.MetallicRoughness = sprite_get_texture(Sprites[? _spritePath], 0);
+				}
+				break;
+
+			// Normal texture
+			case "norm":
+				{
+					var _spritePath = filename_path(_path) + _split[1];
+					Sprites ??= ds_map_create();
+					if (!ds_map_exists(Sprites, _spritePath))
+					{
+						if (!file_exists(_spritePath))
+						{
+							throw "File " + _spritePath + " does not exist!";
+						}
+						Sprites[? _spritePath] = sprite_add(_spritePath, 1, false, false, 0, 0);
+					}
+					_material.Normal = sprite_get_texture(Sprites[? _spritePath], 0);
+				}
 				break;
 			}
 
@@ -79,7 +113,8 @@ function CModel() constructor
 	/// @return {Struct.CModel} Returns `self`.
 	///
 	/// @throws {String} If an error occurs.
-	static FromOBJ = function (_path) {
+	static FromOBJ = function (_path)
+	{
 		if (IsLoaded)
 		{
 			throw "Already loaded!";
@@ -211,7 +246,8 @@ function CModel() constructor
 	/// @desc
 	///
 	/// @return {Struct.CModel} Returns `self`.
-	static Freeze = function () {
+	static Freeze = function ()
+	{
 		for (var i = array_length(Meshes) - 1; i >= 0; --i)
 		{
 			Meshes[i].Freeze();
@@ -224,7 +260,8 @@ function CModel() constructor
 	/// @desc
 	///
 	/// @return {Struct.CModel} Returns `self`.
-	static Submit = function () {
+	static Submit = function ()
+	{
 		for (var i = array_length(Meshes) - 1; i >= 0; --i)
 		{
 			Meshes[i].Submit();
@@ -235,7 +272,8 @@ function CModel() constructor
 	/// @func Destroy()
 	///
 	/// @return {Undefined}
-	static Destroy = function () {
+	static Destroy = function ()
+	{
 		// Free meshes
 		for (var i = array_length(Meshes) - 1; i >= 0; --i)
 		{

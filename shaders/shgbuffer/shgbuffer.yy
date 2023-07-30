@@ -1,11 +1,10 @@
 {
-  "type": 1,
+  "resourceType": "GMShader",
+  "resourceVersion": "1.0",
+  "name": "ShGBuffer",
   "parent": {
     "name": "Shaders",
     "path": "folders/Demo/Shaders.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "ShGBuffer",
-  "tags": [],
-  "resourceType": "GMShader",
+  "type": 1,
 }

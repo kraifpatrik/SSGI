@@ -22,15 +22,15 @@ modelMatrix = matrix_build(
 	0.0, 0.0, 0.0,
 	modelScale, modelScale, modelScale);
 
-surShadowmap = noone;
-surDepth = noone;
-surNormal = noone;
-surLight = noone;
-surWork = noone;
-surWork2 = noone;
-surWork3 = noone;
-surSSAO = noone;
-surSSGI = noone;
+surShadowmap = -1;
+surDepth = -1;
+surNormal = -1;
+surLight = -1;
+surWork = -1;
+surWork2 = -1;
+surWork3 = -1;
+surSSAO = -1;
+surSSGI = -1;
 
 ssgi = new SSGI();
 ssgi.ClipFar = clipFar;
@@ -76,8 +76,10 @@ draw_set_font(FntOpenSans10);
 enum EDisplayMode
 {
 	BaseColor,
-	Depth,
+	Metallic,
 	Normal,
+	Roughness,
+	Depth,
 	Light,
 	SSAO,
 	SSGI,
@@ -87,8 +89,10 @@ enum EDisplayMode
 
 displayModeNames = [
 	"BaseColor",
-	"Depth",
+	"Metallic",
 	"Normal",
+	"Roughness",
+	"Depth",
 	"Light",
 	"SSAO",
 	"SSGI",

@@ -39,13 +39,13 @@ function SSAO() constructor
 	__Kernel = CreateKernel(__SSAO_KERNEL_SIZE);
 
 	/// @var {Id.Surface} The surface to draw the SSAO to.
-	SurResult = noone;
+	SurResult = -1;
 
 	/// @var {Id.Surface} A working surface used for blurring the SSAO.
-	SurWork = noone;
+	SurWork = -1;
 
 	/// @var {Id.Surface} A surface containing scene depth.
-	SurDepth = noone;
+	SurDepth = -1;
 
 	/// @var {Array<Real>} The projection matrix used when rendering the scene.
 	MatrixProjection = matrix_build_identity();
@@ -80,8 +80,9 @@ function SSAO() constructor
 	///
 	/// @param {Real} _size The size of the sprite.
 	///
-	/// @return {Id.Sprite} The created noise sprite.
-	static MakeNoiseSprite = function (_size) {
+	/// @return {Asset.GMSprite} The created noise sprite.
+	static MakeNoiseSprite = function (_size)
+	{
 		var _seed = random_get_seed();
 		randomize();
 		var _sur = surface_create(_size, _size);
@@ -117,7 +118,8 @@ function SSAO() constructor
 	///
 	/// @return {Array<Real>} The created kernel as
 	/// `[v1X, v1Y, v1Z, v2X, v2Y, v2Z, ..., vnX, vnY, vnZ]`.
-	static CreateKernel = function (_size) {
+	static CreateKernel = function (_size)
+	{
 		var _seed = random_get_seed();
 		randomize();
 		var _kernel = array_create(_size * 2, 0.0);
@@ -139,7 +141,8 @@ function SSAO() constructor
 	/// @desc
 	///
 	/// @return {Struct.SSAO} Returns `self`.
-	static Render = function () {
+	static Render = function ()
+	{
 		var _tanAspect = [1.0 / MatrixProjection[0], -1.0 / MatrixProjection[5]];
 		var _width = surface_get_width(SurResult);
 		var _height = surface_get_height(SurResult);
@@ -200,7 +203,8 @@ function SSAO() constructor
 	/// @desc
 	///
 	/// @return {Undefined}
-	static Destroy = function () {
+	static Destroy = function ()
+	{
 		sprite_delete(__SpriteNoise);
 		return undefined;
 	};

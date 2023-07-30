@@ -9,9 +9,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/lion.png
-map_Disp textures/lion_ddn.png
-map_Ka textures/lion.png
+map_Kd textures/lion_BaseColor.jpg
+map_Pmr textures/lion_MetallicRoughness.jpg
+norm textures/lion_Normal.jpg
 
 newmtl Material__298
 Ns 7.843137
@@ -21,9 +21,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/background.png
-map_Disp textures/background_ddn.png
-map_Ka textures/background.png
+map_Kd textures/background_BaseColor.jpg
+map_Pmr textures/background_MetallicRoughness.jpg
+norm textures/background_Normal.jpg
 
 newmtl Material__47
 Ns 7.843137
@@ -43,9 +43,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd textures/vase_plant.png
-map_d textures/vase_plant_mask.png
-map_Ka textures/vase_plant.png
+map_Kd textures/vase_plant_BaseColor.png
+map_Pmr textures/vase_plant_MetallicRoughness.jpg
+norm textures/vase_plant_Normal.jpg
 
 newmtl arch
 Ns 7.843137
@@ -55,9 +55,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_arch_diff.png
-map_Ka textures/sponza_arch_diff.png
-map_Disp textures/sponza_arch_ddn.png
+map_Kd textures/sponza_arch_BaseColor.jpg
+map_Pmr textures/sponza_arch_MetallicRoughness.jpg
+norm textures/sponza_arch_Normal.jpg
 
 newmtl bricks
 Ns 7.843137
@@ -67,9 +67,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/spnza_bricks_a_diff.png
-map_Disp textures/spnza_bricks_a_ddn.png
-map_Ka textures/spnza_bricks_a_diff.png
+map_Kd textures/spnza_bricks_a_BaseColor.jpg
+map_Pmr textures/spnza_bricks_a_MetallicRoughness.jpg
+norm textures/spnza_bricks_a_Normal.jpg
 
 newmtl ceiling
 Ns 7.843137
@@ -79,9 +79,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_ceiling_a_diff.png
-map_Ka textures/sponza_ceiling_a_diff.png
-map_Disp textures/sponza_ceiling_a_ddn.png
+map_Kd textures/sponza_ceiling_a_BaseColor.jpg
+map_Pmr textures/sponza_ceiling_a_MetallicRoughness.jpg
+norm textures/sponza_ceiling_a_Normal.jpg
 
 newmtl chain
 Ns 7.843137
@@ -91,10 +91,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd textures/chain_texture.png
-map_d textures/chain_texture_mask.png
-map_Disp textures/chain_texture_ddn.png
-map_Ka textures/chain_texture.png
+map_Kd textures/chain_texture_BaseColor.png
+map_Pmr textures/chain_texture_MetallicRoughness.jpg
+norm textures/chain_texture_Normal.jpg
 
 newmtl column_a
 Ns 7.843137
@@ -104,9 +103,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_column_a_diff.png
-map_Disp textures/sponza_column_a_ddn.png
-map_Ka textures/sponza_column_a_diff.png
+map_Kd textures/sponza_column_a_BaseColor.jpg
+map_Pmr textures/sponza_column_a_MetallicRoughness.jpg
+norm textures/sponza_column_a_Normal.jpg
 
 newmtl column_b
 Ns 7.843137
@@ -116,9 +115,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_column_b_diff.png
-map_Disp textures/sponza_column_b_ddn.png
-map_Ka textures/sponza_column_b_diff.png
+map_Kd textures/sponza_column_b_BaseColor.jpg
+map_Pmr textures/sponza_column_b_MetallicRoughness.jpg
+norm textures/sponza_column_b_Normal.jpg
 
 newmtl column_c
 Ns 7.843137
@@ -128,9 +127,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_column_c_diff.png
-map_Disp textures/sponza_column_c_ddn.png
-map_Ka textures/sponza_column_c_diff.png
+map_Kd textures/sponza_column_c_BaseColor.jpg
+map_Pmr textures/sponza_column_c_MetallicRoughness.jpg
+norm textures/sponza_column_c_Normal.jpg
 
 newmtl details
 Ns 7.843137
@@ -140,9 +139,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_details_diff.png
-map_Ka textures/sponza_details_diff.png
-map_Disp textures/sponza_details_ddn.png
+map_Kd textures/sponza_details_BaseColor.jpg
+map_Pmr textures/sponza_details_MetallicRoughness.jpg
+norm textures/sponza_details_Normal.jpg
 
 newmtl fabric_a
 Ns 7.843137
@@ -152,9 +151,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_fabric_diff.png
-map_Ka textures/sponza_fabric_diff.png
-map_Disp textures/sponza_fabric_ddn.png
+map_Kd textures/sponza_fabric_BaseColor.jpg
+map_Pmr textures/sponza_fabric_MetallicRoughness.jpg
+norm textures/sponza_fabric_Normal.jpg
 
 newmtl fabric_c
 Ns 7.843137
@@ -164,9 +163,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_curtain_diff.png
-map_Ka textures/sponza_curtain_diff.png
-map_Disp textures/sponza_curtain_ddn.png
+map_Kd textures/sponza_curtain_BaseColor.jpg
+map_Pmr textures/sponza_curtain_MetallicRoughness.jpg
+norm textures/sponza_curtain_Normal.jpg
 
 
 newmtl fabric_d
@@ -177,9 +176,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_fabric_blue_diff.png
-map_Ka textures/sponza_fabric_blue_diff.png
-map_Disp textures/sponza_fabric_ddn.png
+map_Kd textures/sponza_fabric_blue_BaseColor.jpg
+map_Pmr textures/sponza_fabric_MetallicRoughness.jpg
+norm textures/sponza_fabric_Normal.jpg
 
 
 newmtl fabric_e
@@ -190,9 +189,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_fabric_green_diff.png
-map_Ka textures/sponza_fabric_green_diff.png
-map_Disp textures/sponza_fabric_ddn.png
+map_Kd textures/sponza_fabric_green_BaseColor.jpg
+map_Pmr textures/sponza_fabric_MetallicRoughness.jpg
+norm textures/sponza_fabric_Normal.jpg
 
 
 newmtl fabric_f
@@ -203,9 +202,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_curtain_green_diff.png
-map_Ka textures/sponza_curtain_green_diff.png
-map_Disp textures/sponza_curtain_ddn.png
+map_Kd textures/sponza_curtain_green_BaseColor.jpg
+map_Pmr textures/sponza_curtain_MetallicRoughness.jpg
+norm textures/sponza_curtain_Normal.jpg
 
 newmtl fabric_g
 Ns 7.843137
@@ -215,9 +214,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_curtain_blue_diff.png
-map_Ka textures/sponza_curtain_blue_diff.png
-map_Disp textures/sponza_curtain_ddn.png
+map_Kd textures/sponza_curtain_blue_BaseColor.jpg
+map_Pmr textures/sponza_curtain_MetallicRoughness.jpg
+norm textures/sponza_curtain_Normal.jpg
 
 
 newmtl flagpole
@@ -228,9 +227,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_flagpole_diff.png
-map_Ka textures/sponza_flagpole_diff.png
-map_Disp textures/sponza_flagpole_ddn.png
+map_Kd textures/sponza_flagpole_BaseColor.jpg
+map_Pmr textures/sponza_flagpole_MetallicRoughness.jpg
+norm textures/sponza_flagpole_Normal.jpg
 
 newmtl floor
 Ns 7.843137
@@ -240,9 +239,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_floor_a_diff.png
-map_Ka textures/sponza_floor_a_diff.png
-map_Disp textures/sponza_floor_a_ddn.png
+map_Kd textures/sponza_floor_a_BaseColor.jpg
+map_Pmr textures/sponza_floor_a_MetallicRoughness.jpg
+norm textures/sponza_floor_a_Normal.jpg
 
 newmtl leaf
 Ns 7.843137
@@ -252,10 +251,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd textures/sponza_thorn_diff.png
-map_d textures/sponza_thorn_mask.png
-map_Disp textures/sponza_thorn_ddn.png
-map_Ka textures/sponza_thorn_diff.png
+map_Kd textures/sponza_thorn_BaseColor.png
+map_Pmr textures/sponza_thorn_MetallicRoughness.jpg
+norm textures/sponza_thorn_Normal.jpg
 
 newmtl roof
 Ns 7.843137
@@ -265,9 +263,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/sponza_roof_diff.png
-map_Ka textures/sponza_roof_diff.png
-map_Ka textures/sponza_roof_ddn.png
+map_Kd textures/sponza_roof_BaseColor.jpg
+map_Pmr textures/sponza_roof_MetallicRoughness.jpg
+norm textures/sponza_roof_Normal.jpg
 
 newmtl vase
 Ns 7.843137
@@ -277,9 +275,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/vase_dif.png
-map_Ka textures/vase_dif.png
-map_Disp textures/vase_ddn.png
+map_Kd textures/vase_BaseColor.jpg
+map_Pmr textures/vase_MetallicRoughness.jpg
+norm textures/vase_Normal.jpg
 
 newmtl vase_hanging
 Ns 7.843137
@@ -289,9 +287,9 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/vase_hanging.png
-map_Ka textures/vase_hanging.png
-map_Disp textures/vase_hanging_ddn.png
+map_Kd textures/vase_hanging_BaseColor.jpg
+map_Pmr textures/vase_hanging_MetallicRoughness.jpg
+norm textures/vase_hanging_Normal.jpg
 
 newmtl vase_round
 Ns 7.843137
@@ -301,6 +299,6 @@ Ks 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
 illum 2
-map_Kd textures/vase_round.png
-map_Disp textures/vase_round_ddn.png
-map_Ka textures/vase_round.png
+map_Kd textures/vase_round_BaseColor.jpg
+map_Pmr textures/vase_round_MetallicRoughness.jpg
+norm textures/vase_round_Normal.jpg

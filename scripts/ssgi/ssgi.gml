@@ -30,7 +30,7 @@ function SSGI() constructor
 	BlurNormalThreshold = 0.5;
 
 	/// @var {Id.Surface} A surface containing lit scene.
-	SurLight = noone;
+	SurLight = -1;
 
 	/// @var {Pointer.Texture} A texture containing scene depth.
 	TextureDepth = pointer_null;
@@ -65,19 +65,19 @@ function SSGI() constructor
 
 	/// @var {Id.Surface} A full resolution surface to render the global
 	/// illumination into.
-	SurResult = noone;
+	SurResult = -1;
 
 	/// @var {Id.Surface} A 1/2-resolution temporary surface used for rendering
 	/// the global illumination.
-	SurHalf = noone;
+	SurHalf = -1;
 
 	/// @var {Id.Surface} A 1/4-resolution temporary surface used for rendering
 	/// the global illumination.
-	SurQuarter = noone;
+	SurQuarter = -1;
 
 	/// @var {Id.Surface} A 1/8-resolution temporary surface used for rendering
 	/// the global illumination.
-	SurEighth = noone;
+	SurEighth = -1;
 
 	////////////////////////////////////////////////////////////////////////////
 	// Shaders and uniforms
@@ -113,7 +113,8 @@ function SSGI() constructor
 	/// @desc
 	///
 	/// @return {Asset.GMSprite}
-	static MakeKernelSprite = function () {
+	static MakeKernelSprite = function ()
+	{
 		var _size = __SSGI_KERNEL_SIZE;
 		var _indices = ds_list_create();
 		for (var i = 0; i < _size * _size; ++i)
@@ -145,7 +146,8 @@ function SSGI() constructor
 	/// @desc
 	///
 	/// @return {Struct.SSGI} Returns `self`.
-	static Render = function () {
+	static Render = function ()
+	{
 		if (!surface_exists(SurResult)
 			|| !surface_exists(SurHalf)
 			|| !surface_exists(SurQuarter)
@@ -261,7 +263,8 @@ function SSGI() constructor
 	/// @desc
 	///
 	/// @return {Undefined}
-	static Destroy = function () {
+	static Destroy = function ()
+	{
 		sprite_delete(__SpriteKernel);
 		return undefined;
 	};

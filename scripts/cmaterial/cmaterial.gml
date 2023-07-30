@@ -4,14 +4,21 @@
 function CMaterial() constructor
 {
 	/// @var {Pointer.Texture}
-	Texture = -1;
+	BaseColor = -1;
+
+	// @var {Pointer.Texture}
+	MetallicRoughness = -1;
+
+	// @var {Pointer.Texture}
+	Normal = -1;
 
 	/// @func Destroy()
 	///
 	/// @desc
 	///
 	/// @return {Undefined}
-	static Destroy = function () {
+	static Destroy = function ()
+	{
 		return undefined;
 	};
 }

@@ -81,6 +81,13 @@ shadowmapProjection = matrix_build_projection_ortho(
 shadowmapViewProjection = matrix_multiply(shadowmapView, shadowmapProjection);
 
 ////////////////////////////////////////////////////////////////////////////////
+if (keyboard_check(ord("F")))
+{
+	sunDirection[@ 0] = _directionX;
+	sunDirection[@ 1] = _directionY;
+	sunDirection[@ 2] = _directionZ;
+}
+
 if (keyboard_check_pressed(vk_f1))
 {
 	guiShow = !guiShow;

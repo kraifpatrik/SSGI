@@ -39,7 +39,8 @@ function CGUI() constructor
 	/// @param {Real} _y
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static SetPosition = function (_x, _y) {
+	static SetPosition = function (_x, _y)
+	{
 		gml_pragma("forceinline");
 		DrawX = _x;
 		ColumnX = _x;
@@ -55,7 +56,8 @@ function CGUI() constructor
 	/// @param {Real} [_y]
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static Move = function (_x, _y=0) {
+	static Move = function (_x, _y=0)
+	{
 		gml_pragma("forceinline");
 		DrawX += _x;
 		DrawY += _y;
@@ -67,7 +69,8 @@ function CGUI() constructor
 	/// @desc
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static Update = function () {
+	static Update = function ()
+	{
 		MouseX = window_mouse_get_x();
 		MouseY = window_mouse_get_y();
 		MouseOverUI = false;
@@ -81,7 +84,8 @@ function CGUI() constructor
 	/// @param {Real} [_count]
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static Newline = function (_count=1) {
+	static Newline = function (_count=1)
+	{
 		gml_pragma("forceinline");
 		DrawX = ColumnX;
 		DrawY += (LineHeight + LineSpacing) * _count;
@@ -99,7 +103,8 @@ function CGUI() constructor
 	/// @param {Real} [_shadowAlpha]
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static DrawTextShadow = function (_text, _color=c_white, _alpha=1.0, _shadowColor=c_black, _shadowAlpha=1.0) {
+	static DrawTextShadow = function (_text, _color=c_white, _alpha=1.0, _shadowColor=c_black, _shadowAlpha=1.0)
+	{
 		gml_pragma("forceinline");
 		var _textY = DrawY + floor((LineHeight - string_height(_text)) / 2);
 		if (_shadowAlpha > 0.0)
@@ -119,7 +124,8 @@ function CGUI() constructor
 	/// @param {Struct} [_props]
 	///
 	/// @return {Struct.CGUI} Returns `self.`
-	static Text = function (_text, _props={}) {
+	static Text = function (_text, _props={})
+	{
 		var _color = _props[$ "Color"] ?? c_white;
 		DrawTextShadow(_text, _color);
 		return self;
@@ -133,7 +139,8 @@ function CGUI() constructor
 	/// @param {Struct} [_props]
 	///
 	/// @return {Struct.CGUI} Returns `self.`
-	static Button = function (_text, _props={}) {
+	static Button = function (_text, _props={})
+	{
 		var _textWidth = string_width(_text);
 		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;
@@ -174,7 +181,8 @@ function CGUI() constructor
 	/// @param {Struct} [_props]
 	///
 	/// @return {Struct.CGUI} Returns `self.`
-	static Checkbox = function (_checked, _props={}) {
+	static Checkbox = function (_checked, _props={})
+	{
 		var _label = _props[$ "Label"];
 		var _onChange = _props[$ "OnChange"];
 		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
@@ -228,7 +236,8 @@ function CGUI() constructor
 	/// @param {Struct} [_props]
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static Slider = function (_id, _value, _props={}) {
+	static Slider = function (_id, _value, _props={})
+	{
 		var _min = _props[$ "Min"] ?? 0.0;
 		var _max = _props[$ "Max"] ?? 1.0;
 		var _factor = (_value - _min) / (_max - _min);
@@ -312,7 +321,8 @@ function CGUI() constructor
 	/// @param {Struct} [_props]
 	///
 	/// @return {Struct.CGUI} Returns `self`.
-	static Input = function (_id, _value, _props={}) {
+	static Input = function (_id, _value, _props={})
+	{
 		var _onChange = _props[$ "OnChange"];
 		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;

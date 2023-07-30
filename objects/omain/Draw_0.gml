@@ -5,6 +5,7 @@ var _modelSphere = modelSphere;
 var _shader;
 
 gpu_push_state();
+gpu_set_blendenable(false);
 gpu_set_zwriteenable(true);
 gpu_set_ztestenable(true);
 gpu_set_tex_filter(true);
@@ -74,6 +75,8 @@ texture_set_stage(_uBestFitNormals,
 	sprite_get_texture(SprBestFitNormals, 0));
 gpu_set_tex_filter_ext(_uBestFitNormals, false);
 gpu_set_tex_mip_enable_ext(_uBestFitNormals, false);
+shader_set_uniform_f(shader_get_uniform(_shader, "u_vCameraPosition"),
+	x, y, z);
 
 shader_set_uniform_f(_uEmissive, 0.0, 0.0, 0.0);
 matrix_set(matrix_world, modelMatrix);

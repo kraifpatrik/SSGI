@@ -4,15 +4,31 @@ var _windowWidth = window_get_width();
 switch (displayMode)
 {
 case EDisplayMode.BaseColor:
+	shader_set(ShPreviewColor);
 	draw_surface(application_surface, 0, 0);
+	shader_reset();
+	break;
+
+case EDisplayMode.Metallic:
+	shader_set(ShPreviewAlpha);
+	draw_surface(application_surface, 0, 0);
+	shader_reset();
+	break;
+
+case EDisplayMode.Normal:
+	shader_set(ShPreviewColor);
+	draw_surface(surNormal, 0, 0);
+	shader_reset();
+	break;
+
+case EDisplayMode.Roughness:
+	shader_set(ShPreviewAlpha);
+	draw_surface(surNormal, 0, 0);
+	shader_reset();
 	break;
 
 case EDisplayMode.Depth:
 	draw_surface(surDepth, 0, 0);
-	break;
-
-case EDisplayMode.Normal:
-	draw_surface(surNormal, 0, 0);
 	break;
 
 case EDisplayMode.Light:
@@ -138,7 +154,7 @@ if (guiShow)
 		})
 		.Move(7)
 		.Slider("sun-direction-z", sunDirection[2], {
-			Label: "Sun direction",
+			Label: "Sun direction (F)",
 			Width: 62,
 			Min: -1.0,
 			Max: 1.0,

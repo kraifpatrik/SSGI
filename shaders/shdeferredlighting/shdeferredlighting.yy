@@ -1,11 +1,10 @@
 {
-  "type": 1,
+  "resourceType": "GMShader",
+  "resourceVersion": "1.0",
+  "name": "ShDeferredLighting",
   "parent": {
     "name": "Shaders",
     "path": "folders/Demo/Shaders.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "ShDeferredLighting",
-  "tags": [],
-  "resourceType": "GMShader",
+  "type": 1,
 }
