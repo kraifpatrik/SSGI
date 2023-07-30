@@ -1,6 +1,4 @@
-camera_destroy(camera);
-
-model.Destroy();
+event_inherited();
 
 if (surface_exists(surShadowmap))
 {

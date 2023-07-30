@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "CMesh",
+  "name": "SurfaceCheck",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

@@ -9,7 +9,7 @@
   "option_game_speed": 60,
   "option_gameguid": "6e803877-ad4f-4a02-971c-211a14bc2449",
   "option_gameid": "0",
-  "option_mips_for_3d_textures": false,
+  "option_mips_for_3d_textures": true,
   "option_sci_usesci": false,
   "option_spine_licence": false,
   "option_steam_app_id": "0",

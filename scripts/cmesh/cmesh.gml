@@ -38,15 +38,33 @@ function CMesh(_model=undefined) constructor
 		if (VertexBuffer != undefined)
 		{
 			var _shader = shader_current();
-			var _baseColor = -1;
-			var _metallicRoughness = -1;
-			var _normal = -1;
+			var _baseColor = pointer_null;
+			var _metallicRoughness = pointer_null;
+			var _normal = pointer_null;
 
 			if (Material != undefined)
 			{
-				_baseColor = Model.Materials[? Material].BaseColor;
-				_metallicRoughness = Model.Materials[? Material].MetallicRoughness;
-				_normal = Model.Materials[? Material].Normal;
+				with (Model.Materials[? Material])
+				{
+					_baseColor = BaseColor;
+					_metallicRoughness = MetallicRoughness;
+					_normal = Normal;
+				}
+			}
+
+			if (_baseColor == pointer_null)
+			{
+				_baseColor = sprite_get_texture(SprWhite, 0);
+			}
+
+			if (_metallicRoughness == pointer_null)
+			{
+				_metallicRoughness = sprite_get_texture(SprMetallicRoughness, 0);
+			}
+
+			if (_normal == pointer_null)
+			{
+				_normal = sprite_get_texture(SprNormal, 0);
 			}
 
 			texture_set_stage(shader_get_sampler_index(_shader, "u_texMetallicRoughness"), _metallicRoughness);

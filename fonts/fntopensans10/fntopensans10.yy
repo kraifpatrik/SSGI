@@ -169,7 +169,7 @@
   "maintainGms1Font": false,
   "parent": {
     "name": "Fonts",
-    "path": "folders/Demo/Fonts.yy",
+    "path": "folders/Template/Fonts.yy",
   },
   "pointRounding": 0,
   "ranges": [

@@ -142,7 +142,7 @@ function CGUI() constructor
 	static Button = function (_text, _props={})
 	{
 		var _textWidth = string_width(_text);
-		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
+		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;
 		var _backgroundColor = _props[$ "BackgroundColor"] ?? c_dkgray;
 		var _width = _props[$ "Width"] ?? (_textWidth + 8);
@@ -185,10 +185,10 @@ function CGUI() constructor
 	{
 		var _label = _props[$ "Label"];
 		var _onChange = _props[$ "OnChange"];
-		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
+		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;
 		var _backgroundColor = _props[$ "BackgroundColor"] ?? c_dkgray;
-		var _fillColor = _props[$ "FillColor"] ?? c_aqua;
+		var _fillColor = _props[$ "FillColor"] ?? c_orange;
 		var _width = _props[$ "Width"] ?? LineHeight;
 		var _height = _props[$ "Height"] ?? LineHeight;
 		var _mouseOver = (MouseX >= DrawX && MouseX <= DrawX + _width
@@ -244,10 +244,10 @@ function CGUI() constructor
 		var _round = _props[$ "Round"] ?? false;
 		var _label = _props[$ "Label"];
 		var _onChange = _props[$ "OnChange"];
-		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
+		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;
 		var _backgroundColor = _props[$ "BackgroundColor"] ?? c_dkgray;
-		var _fillColor = _props[$ "FillColor"] ?? c_aqua;
+		var _fillColor = _props[$ "FillColor"] ?? c_orange;
 		var _width = _props[$ "Width"] ?? 200;
 		var _height = _props[$ "Height"] ?? LineHeight;
 		var _mouseOver = (MouseX >= DrawX && MouseX <= DrawX + _width
@@ -324,7 +324,7 @@ function CGUI() constructor
 	static Input = function (_id, _value, _props={})
 	{
 		var _onChange = _props[$ "OnChange"];
-		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? GUI_SprRoundRect4;
+		var _backgroundSprite = _props[$ "BackgroundSprite"] ?? SprRoundRect4;
 		var _backgroundSubimage = _props[$ "BackgroundSubimage"] ?? 0;
 		var _backgroundColor = _props[$ "BackgroundColor"] ?? c_dkgray;
 		var _width = _props[$ "Width"] ?? 200;
